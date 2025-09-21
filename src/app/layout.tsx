@@ -25,14 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="navbar">
+        <div className="navbar fixed top-0 w-full">
           <nav className={`navbar bg-[var(--light-dark-color)] rounded-full mx-auto my-2 h-[3.75rem] px-4 md:px-8 py-3 md:py-2 flex items-center justify-between max-w-[100%] shadow-lg border border-[1px] border-[var(--light-blur-grey-color)] fixed top-[0.125rem] left-1/2 transform -translate-x-1/2 w-[98%] z-50 ${isScrolled ? "backdrop-blur-sm bg-opacity-95" : ""}`}>
             <Link href="/" className="text-2xl font-bold text-white">
               <img className="hidden md:block w-[8.4375rem]" src={logo.src} alt="BookAdZone Logo" />
               <img className="block md:hidden w-[3.125rem]" src={mobilelogo.src} alt="BookAdZone" />
             </Link>
 
-            <div className="hidden md:flex gap-[3rem] items-center">
+            <div className="hidden md:flex gap-[3rem] items-center font-medium">
               <div className="menu-wrapper text-white text-[0.800rem] gap-[2rem] flex items-center w-fit flex justify-end  ml-[1.875rem]">
                 <Link href="/" className="hover:text-purple-400 transition-colors">Home</Link>
                 <Link href="/features" className="hover:text-purple-400 transition-colors">Features</Link>
@@ -40,7 +40,7 @@ export default function RootLayout({
                 <Link href="/contact" className="hover:text-purple-400 transition-colors">Contact</Link>
               </div>
               <Link href="/get-notified">
-                <button className="text-[0.875rem] text-white w-[8.125rem] p-[0.625rem] rounded-[1.375rem] bg-[rgb(79_58_154_/_0.88)] hover:bg-[rgb(79_58_154)] transition-colors">
+                <button className="text-[0.875rem] text-white w-[8.125rem] p-[0.625rem] rounded-[1.375rem] bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] transition-colors">
                   Get Notified
                 </button>
               </Link>
@@ -49,7 +49,6 @@ export default function RootLayout({
               <Hamburger
                 toggled={isMobileMenuOpen}
                 toggle={setIsMobileMenuOpen} 
-                // onToggle={(prev) =>setIsMobileMenuOpen(!prev)}
                 color="white"
                 size={24}
               />
@@ -73,7 +72,7 @@ export default function RootLayout({
                   <motion.div key={idx}  >
                     <Link
                       href={item === "Home" ? "/" : `/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-white text-base hover:text-purple-400 transition-colors"
+                      className="text-white text-base hover:text-purple-400 transition-colors font-medium"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item}
@@ -81,10 +80,10 @@ export default function RootLayout({
                   </motion.div>
                 ))}
 
-                <motion.div className="w-full mt-auto">
+                <motion.div className="w-full mt-auto font-medium">
                   <Link
                     href="/get-notified"
-                    className="w-full text-center text-white bg-purple-700 hover:bg-purple-600 py-3 rounded-[30px] text-sm transition-colors block  "
+                    className="w-full text-center text-white bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] py-3 rounded-[30px] text-sm transition-colors block  "
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Get Notified

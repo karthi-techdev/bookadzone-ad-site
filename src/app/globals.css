@@ -15,3 +15,9 @@ body {
   background-color: var(--dark-color);
   font-family: 'Urbanist Variable', sans-serif;
 }
+
+@media (min-width: 379px) and (max-width: 1050px) {
+  h1 {
+    max-width: 22ch; /* adjust for 3 lines */
+  }
+}
