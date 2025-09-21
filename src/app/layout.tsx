@@ -36,8 +36,8 @@ export default function RootLayout({
               <div className="menu-wrapper text-white text-[0.800rem] gap-[2rem] flex items-center w-fit flex justify-end  ml-[1.875rem]">
                 <Link href="/" className="hover:text-[var(--purple-color)] transition-colors">Home</Link>
                 <Link href="/features" className="hover:text-[var(--purple-color)] transition-colors">Features</Link>
-                <Link href="/how-it-works" className="text-[var(--purple-color)] transition-colors">How it works?</Link>
-                <Link href="/contact" className="text-[var(--purple-color)] transition-colors">Contact</Link>
+                <Link href="/how-it-works" className="hover:text-[var(--purple-color)] transition-colors">How it works?</Link>
+                <Link href="/contact" className="hover:text-[var(--purple-color)] transition-colors">Contact</Link>
               </div>
               <Link href="/get-notified">
                 <button className="text-[0.875rem] text-white w-[8.125rem] p-[0.625rem] rounded-[1.375rem] bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] transition-colors">
