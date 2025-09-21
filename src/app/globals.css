@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+:root {
+  --dark-color: #080411;
+  --purple-color: #7F6AF7;
+  --white-color: #FFFFFF;
+  --light-grey-color: #98A9B8;
+  --light-blur-grey-color: #98a9b882;
+  --light-purple-color: #7f6af766;
+  --light-dark-color: #080411b3;
+  --white-glass-color: #ffffff1f;
+}
+
+body {
+  background-color: var(--dark-color);
+  font-family: 'Urbanist Variable', sans-serif;
+}
