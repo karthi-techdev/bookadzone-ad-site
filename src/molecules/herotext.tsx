@@ -13,7 +13,7 @@ export const HeroText: React.FC<HeroTextProps> = ({  paragraph, buttonLabel }) =
     <div className="w-full max-w-2xl space-y-6">
       <Heading label={"Modernize Outdoor Advertising with"} labelTwo={"Predictive AI"} labelThree={"Insights"} />
       <Paragraph label={paragraph} />
-      <Button label={buttonLabel} className="mt-5 inline-block" />
+      <Button label={buttonLabel} className="mt-5 inline-block max-[556px]:text-[.8rem] max-[556px]:mt-3" />
     </div>
   );
 };

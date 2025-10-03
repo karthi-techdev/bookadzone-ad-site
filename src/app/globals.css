@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   --dark-color: #080411;
@@ -8,7 +9,7 @@
   --light-blur-grey-color: #98a9b882;
   --light-purple-color: #7f6af766;
   --light-dark-color: #080411b3;
-  --white-glass-color: #ffffff1f;
+  --white-glass-color: #ffffff1f; 
 }
 
 body {
@@ -18,6 +19,6 @@ body {
 
 @media (min-width: 379px) and (max-width: 1050px) {
   h1 {
-    max-width: 22ch; /* adjust for 3 lines */
+    max-width: 22ch; 
   }
 }

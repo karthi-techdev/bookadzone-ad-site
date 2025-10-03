@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="navbar fixed top-0 w-full">
+        <div className="navbar fixed top-0 w-full z-9999999">
           <nav className={`navbar bg-[var(--light-dark-color)] rounded-full mx-auto my-2 h-[3.75rem] px-4 md:px-8 py-3 md:py-2 flex items-center justify-between max-w-[100%] shadow-lg border border-[1px] border-[var(--light-blur-grey-color)] fixed top-[0.125rem] left-1/2 transform -translate-x-1/2 w-[98%] z-50 ${isScrolled ? "backdrop-blur-sm bg-opacity-95" : ""}`}>
             <Link href="/" className="text-2xl font-bold text-white">
               <img className="hidden md:block w-[8.4375rem]" src={logo.src} alt="BookAdZone Logo" />
@@ -96,7 +96,7 @@ export default function RootLayout({
          <div className="h-[5rem] md:h-[4rem]"></div>
         </div>
 
-        <div className="fixed top-0 inset-0 bg-[url('/media/images/blurry-hero-animated.svg')] h-[100dvh] w-full bg-cover bg-no-repeat bg-center blur-[185px] z-[-1000]"></div>
+        <div className="fixed top-0 inset-0 bg-[url('/media/images/blurry-hero-animated.svg')] h-[100dvh] w-full bg-cover bg-no-repeat bg-center blur-[12rem] z-[-1000]"></div>
         {children}
       </body>
     </html>
