@@ -8,13 +8,14 @@ import productImg3 from '../../public/media/images/baz-img-features-3.png'
 import productImg4 from '../../public/media/images/baz-img-features-4.png'
 import productImg5 from '../../public/media/images/baz-img-features-5.png'
 import productImgLaptop from '../../public/media/images/baz-img-laptop.png'
-import productImgBeam from '../../public/media/images/baz-img-beam.png'
+import productImgBeam from '../../public/media/images/baz-img-beam-ref.png'
+import productLapImg from '../../public/media/images/baz-laptop-content-search.jpg'
 import Link from "next/link";
 import React, { forwardRef, useRef, useState, useCallback } from "react"
 import { cn } from "../lib/utils"
 import { AnimatedBeam } from "../components/ui/animated-beam"
 import { RiAiGenerate2 } from "react-icons/ri";
-import { RiSearch2Line } from "react-icons/ri";
+import { IoQrCode } from "react-icons/io5";
 import { TiLocation } from "react-icons/ti";
 import { BsCalendarCheck } from "react-icons/bs";
 import { BiSolidCategoryAlt } from "react-icons/bi";
@@ -61,7 +62,7 @@ export default function Home() {
       <HeroSection/>
 
       <section className="features-section">
-        <div className="features-grid px-10 mb-10 max-[556px]:px-5">
+        <div className="features-grid px-10 mb-35 max-[556px]:px-5">
           <div className="grid grid-cols-4 max-[820px]:grid-cols-2 max-[600px]:grid-cols-1 gap-6">
               <div className="p-6 max-[1110px]:p-5 max-[865px]:p-4 max-[820px]:p-6 h-[100%] rounded-xl text-white border border-[1px] border-[var(--light-blur-grey-color)] bg-[var(--light-dark-color)]">
                 <div className="content h-[-webkit-fill-available] flex flex-col justify-evenly">
@@ -172,10 +173,10 @@ export default function Home() {
                   </div>
                 </Circle>
                 <Circle ref={div5Ref} className="relative z-40">
-                  <RiSearch2Line />
+                  <IoQrCode />
                   <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute right-[5rem] max-[850px]:right-[0rem] max-[850px]:bottom-[-5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
-                    <h4 className="text-[.7rem] mb-1">Advanced Search Filters</h4>
-                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Find the perfect ad space by filtering locations, sizes, agencies, and pricing instantly.</p>
+                    <h4 className="text-[.7rem] mb-1">QR Code Booking</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Every billboard comes with a unique QR code, scan it on site to check availability and book instantly.</p>
                   </div>
                 </Circle>
                 </div>
@@ -259,6 +260,14 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+
+     <section className="screen-content-section">
+       <div className="content px-10 mb-20 mt-20 flex">
+         <Image src={productLapImg} alt="Product Image" className="w-full h-auto border border-[1px] border-[var(--light-blur-grey-color)] rounded-[1.3rem] [mask-image:linear-gradient(to_top,rgba(0,0,0,0)_-0%,#000_60%)] [mask-repeat:no-repeat] [mask-size:100%_100%] shadow-lg"/>
+       </div>
+     </section>
+
     </main>
   );
 }
