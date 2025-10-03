@@ -28,7 +28,7 @@ const Circle = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "z-10 flex relative size-17 max-[556px]:size-14 items-center justify-center rounded-full border-1 border-[#6f6f6f] p-3 bg-gradient-to-b from-[#7F6AF7] to-[#000000]",
+        "z-40 cursor-pointer group flex relative size-17 max-[556px]:size-14 items-center justify-center rounded-full border-1 border-[#6f6f6f] p-3 bg-gradient-to-b from-[#7F6AF7] to-[#000000]",
         className
       )}
     >
@@ -164,34 +164,54 @@ export default function Home() {
           <div className="relative flex h-[550px] w-full items-center justify-center overflow-hidden p-10" ref={containerRef}>
             <div className="flex size-full max-h-[600px] max-w-[900px] flex-col items-stretch justify-between gap-10">
               <div className="flex flex-row items-center justify-between">
-                <Circle ref={div1Ref}>
+                <Circle ref={div1Ref} className="relative z-40">
                   <RiAiGenerate2 className="size-5" />
-                  <div className="popup bg-[var(--light-dark-color)] p-2 absolute left-[5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-xs shadow-lg text-center">
-                     <h4 className="text-[.7rem] mb-1">Smart AI Suggestions</h4>
-                     <p className="text-[.5rem] text-[var(--light-grey-color)]">Get personalized ad placement recommendations powered by AI for maximum visibility and ROI.</p>
+                  <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute left-[5rem] max-[850px]:left-[0rem] max-[850px]:bottom-[-5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
+                    <h4 className="text-[.7rem] mb-1">Smart AI Suggestions</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Get personalized ad placement recommendations powered by AI for maximum visibility and ROI.</p>
                   </div>
                 </Circle>
-                <Circle ref={div5Ref}>
+                <Circle ref={div5Ref} className="relative z-40">
                   <RiSearch2Line />
+                  <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute right-[5rem] max-[850px]:right-[0rem] max-[850px]:bottom-[-5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
+                    <h4 className="text-[.7rem] mb-1">Advanced Search Filters</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Find the perfect ad space by filtering locations, sizes, agencies, and pricing instantly.</p>
+                  </div>
                 </Circle>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <Circle ref={div2Ref}>
+                </div>
+                <div className="flex flex-row items-center justify-between">
+                <Circle ref={div2Ref} className="relative z-40">
                   <TiLocation className="size-5" />
+                  <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute left-[5rem] max-[850px]:left-[0rem] max-[850px]:bottom-[-5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
+                    <h4 className="text-[.7rem] mb-1">Location Based Search</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Discover available ad spaces across cities and highways with precise map-based navigation.</p>
+                  </div>
                 </Circle>
-                <Circle ref={div4Ref} className="size-20">
+                <Circle ref={div4Ref} className="size-20 z-10">
                   <Image  src={productImgBeam} alt="Product Image" className="w-full h-auto scale-[4.5] max-[556px]:scale-[4.5]"/>
                 </Circle>
-                <Circle ref={div6Ref}>
+                <Circle ref={div6Ref} className="relative z-40">
                   <BiSolidCategoryAlt className="size-5" />
+                  <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute right-[5rem] w-[10rem] max-[850px]:right-[0rem] max-[850px]:bottom-[-5rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
+                    <h4 className="text-[.7rem] mb-1">Explore Ad Formats</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Browse multiple advertising formats including hoardings, unipoles, digital boards, and more.</p>
+                  </div>
                 </Circle>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <Circle ref={div3Ref}>
+                </div>
+                <div className="flex flex-row items-center justify-between">
+                <Circle ref={div3Ref} className="relative z-40">
                   <BsCalendarCheck className="size-5" />
+                  <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute left-[5rem] max-[850px]:left-[0rem] max-[850px]:bottom-[-5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
+                    <h4 className="text-[.7rem] mb-1">Easy Scheduling</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Book, manage, and schedule your campaigns seamlessly with flexible date options.</p>
+                  </div>
                 </Circle>
-                <Circle ref={div7Ref}>
+                <Circle ref={div7Ref} className="relative z-40">
                   <PiLightningFill className="size-5"/>
+                  <div className="popup backdrop-blur-[5px] opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform translate-y-2 group-hover:translate-y-0 invisible group-hover:visible bg-[var(--light-dark-color)] p-2 absolute right-[5rem] max-[850px]:right-[0rem] max-[850px]:bottom-[-5rem] w-[10rem] border border-[1px] border-[var(--light-blur-grey-color)] rounded-sm shadow-lg text-left z-50">
+                    <h4 className="text-[.7rem] mb-1">Instant Booking</h4>
+                    <p className="text-[.5rem] text-[var(--light-grey-color)]">Reserve your preferred ad space in just a few clicks, fast, secure, and hassle-free.</p>
+                  </div>
                 </Circle>
               </div>
             </div>

@@ -96,7 +96,7 @@ export default function RootLayout({
          <div className="h-[5rem] md:h-[4rem]"></div>
         </div>
 
-        <div className="fixed top-0 inset-0 bg-[url('/media/images/blurry-hero-animated.svg')] h-[100dvh] w-full bg-cover bg-no-repeat bg-center blur-[185px] z-[-1000]"></div>
+        <div className="fixed top-0 inset-0 bg-[url('/media/images/blurry-hero-animated.svg')] h-[100dvh] w-full bg-cover bg-no-repeat bg-center blur-[150px] z-[-1000]"></div>
         {children}
       </body>
     </html>
