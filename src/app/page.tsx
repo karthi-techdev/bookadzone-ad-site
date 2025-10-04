@@ -8,10 +8,10 @@ import productImg3 from '../../public/media/images/baz-img-features-3.png'
 import productImg4 from '../../public/media/images/baz-img-features-4.png'
 import productImg5 from '../../public/media/images/baz-img-features-5.png'
 import productImgLaptop from '../../public/media/images/baz-img-laptop.png'
-import productImgBeam from '../../public/media/images/baz-img-beam-ref.png'
+import productImgBeam from '../../public/media/images/baz-img-beam.png'
 import productLapImg from '../../public/media/images/baz-laptop-content-search.jpg'
 import Link from "next/link";
-import React, { forwardRef, useRef, useState, useCallback } from "react"
+import React, { forwardRef, useRef, useState, useCallback, useEffect } from "react"
 import { cn } from "../lib/utils"
 import { AnimatedBeam } from "../components/ui/animated-beam"
 import { RiAiGenerate2 } from "react-icons/ri";
@@ -56,6 +56,32 @@ export default function Home() {
   const div5Ref = useRef<HTMLDivElement>(null)
   const div6Ref = useRef<HTMLDivElement>(null)
   const div7Ref = useRef<HTMLDivElement>(null)
+
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const targetDate = new Date('2026-03-31T00:00:00').getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        setDays(Math.floor(difference / (1000 * 60 * 60 * 24)));
+        setHours(Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+        setMinutes(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)));
+        setSeconds(Math.floor((difference % (1000 * 60)) / 1000));
+      }
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
   
   return (
     <main className="min-h-screen text-white">
@@ -267,6 +293,38 @@ export default function Home() {
          <Image src={productLapImg} alt="Product Image" className="w-full h-auto border border-[1px] border-[var(--light-blur-grey-color)] rounded-tr-[1.3rem] rounded-tl-[1.3rem] [mask-image:linear-gradient(to_top,rgba(0,0,0,0)_-0%,#000_60%)] [mask-repeat:no-repeat] [mask-size:100%_100%] shadow-lg"/>
        </div>
      </section>
+
+    <section className="countdown-section flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      
+      <div className="w-full max-w-4xl mx-auto text-center">
+        <h3 className="text-3xl max-[556px]:text[2rem] font-bold text-white mb-3">
+          <span className="text-[#7F6AF7]">Next-Gen Billboard Experience</span> Arrives Soon!
+        </h3>
+        
+        <p className="text-xs text-white max-w-md mx-auto mb-10 leading-relaxed">
+          Revolutionizing how brands connect with people, get ready for the transformation.
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <div className="bg-[#080411b3] backdrop-blur-lg rounded-lg p-6 border border-[#98a9b882]">
+            <div className="text-3xl md:text-4xl font-bold text-white">{days}</div>
+            <div className="text-xs text-[#98A9B8] mt-2">Days</div>
+          </div>
+          <div className="bg-[#080411b3] backdrop-blur-lg rounded-lg p-6 border border-[#98a9b882]">
+            <div className="text-3xl md:text-4xl font-bold text-white">{hours}</div>
+            <div className="text-xs text-[#98A9B8] mt-2">Hours</div>
+          </div>
+          <div className="bg-[#080411b3] backdrop-blur-lg rounded-lg p-6 border border-[#98a9b882]">
+            <div className="text-3xl md:text-4xl font-bold text-white">{minutes}</div>
+            <div className="text-xs text-[#98A9B8] mt-2">Minutes</div>
+          </div>
+          <div className="bg-[#080411b3] backdrop-blur-lg rounded-lg p-6 border border-[#98a9b882]">
+            <div className="text-3xl md:text-4xl font-bold text-white">{seconds}</div>
+            <div className="text-xs text-[#98A9B8] mt-2">Seconds</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     </main>
   );
