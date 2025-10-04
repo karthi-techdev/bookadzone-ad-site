@@ -120,7 +120,7 @@ export default function RootLayout({
                   className="relative z-10 w-full max-w-md bg-[var(--light-dark-color)] border border-[var(--light-blur-grey-color)] rounded-xl p-6 shadow-2xl"
                 >
                   <div className="text-center mb-6">
-                    <h2 className="text-xl font-bold text-white">We're <span className="text-[var(--purple-color)]">Launching Soon!</span></h2>
+                    <h2 className="text-xl font-bold text-white">We&apos;re <span className="text-[var(--purple-color)]">Launching Soon&#33;</span></h2>
                     <p className="text-xs text-[var(--light-grey-color)] mt-1">
                       Be the first to know when we go live
                     </p>
