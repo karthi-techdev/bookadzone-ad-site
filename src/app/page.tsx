@@ -302,7 +302,7 @@ export default function Home() {
         </h3>
         
         <p className="text-xs text-white max-w-md mx-auto mb-10 leading-relaxed">
-          Revolutionizing how brands connect with people&#x2c; get ready for the transformation.
+          Revolutionizing how brands connect with people&#x2c; get ready for the transformation
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
