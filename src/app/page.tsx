@@ -62,7 +62,7 @@ export default function Home() {
       <HeroSection/>
 
       <section className="features-section">
-        <div className="features-grid px-10 mb-35 max-[556px]:px-5">
+        <div className="features-grid px-10 mb-35 max-[768px]:mb-10 max-[556px]:px-5">
           <div className="grid grid-cols-4 max-[820px]:grid-cols-2 max-[600px]:grid-cols-1 gap-6">
               <div className="p-6 max-[1110px]:p-5 max-[865px]:p-4 max-[820px]:p-6 h-[100%] rounded-xl text-white border border-[1px] border-[var(--light-blur-grey-color)] bg-[var(--light-dark-color)]">
                 <div className="content h-[-webkit-fill-available] flex flex-col justify-evenly">
@@ -122,7 +122,7 @@ export default function Home() {
       </section>
 
       <section className="laptop-section">
-        <div className="laptop-grid px-10 mt-30 mb-30 max-[768px]:mt-20 max-[768px]:mb-15 max-[556px]:px-5">
+        <div className="laptop-grid px-10 mt-30 mb-30 max-[768px]:mt-0 max-[768px]:mb-15 max-[556px]:px-5">
             <div className="grid grid-cols-3 max-[992px]:grid-cols-1 max-[600px]:grid-cols-1 gap-6">
                <div className="content flex flex-col gap-8 items-start max-[1145px]:gap-5 max-[992px]:flex-row max-[620px]:flex-col ">
                  <div className="content-box w-[70%] max-[992px]:w-[100%] max-[620px]:text-center">
@@ -263,7 +263,7 @@ export default function Home() {
 
 
      <section className="screen-content-section">
-       <div className="content px-10 mb-20 mt-20 flex">
+       <div className="content px-10 mb-20 mt-20 max-[768px]:mt-15 flex">
          <Image src={productLapImg} alt="Product Image" className="w-full h-auto border border-[1px] border-[var(--light-blur-grey-color)] rounded-tr-[1.3rem] rounded-tl-[1.3rem] [mask-image:linear-gradient(to_top,rgba(0,0,0,0)_-0%,#000_60%)] [mask-repeat:no-repeat] [mask-size:100%_100%] shadow-lg"/>
        </div>
      </section>
