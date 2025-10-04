@@ -297,12 +297,12 @@ export default function Home() {
     <section className="countdown-section flex flex-col items-center justify-center p-4 relative overflow-hidden">
       
       <div className="w-full max-w-4xl mx-auto text-center">
-        <h3 className="text-3xl max-[556px]:text[2rem] font-bold text-white mb-3">
-          <span className="text-[#7F6AF7]">Next-Gen Billboard Experience</span> Arrives Soon!
+        <h3 className="text-3xl max-[556px]:text-[2rem] font-bold text-white mb-3">
+          <span className="text-[#7F6AF7]">Next&#8208;Gen Billboard Experience</span> Arrives Soon&#33;
         </h3>
         
         <p className="text-xs text-white max-w-md mx-auto mb-10 leading-relaxed">
-          Revolutionizing how brands connect with people, get ready for the transformation.
+          Revolutionizing how brands connect with people&#x2c; get ready for the transformation.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
