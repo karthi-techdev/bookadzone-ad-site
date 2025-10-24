@@ -14,12 +14,16 @@ import Link from "next/link";
 import React, { forwardRef, useRef, useState, useCallback, useEffect } from "react"
 import { cn } from "../lib/utils"
 import { AnimatedBeam } from "../components/ui/animated-beam"
+import { BackgroundGradientAnimation } from "../components/ui/background-gradient-animation";
 import { RiAiGenerate2 } from "react-icons/ri";
 import { IoQrCode } from "react-icons/io5";
 import { FaLocationDot } from "react-icons/fa6";
 import { BsCalendarCheck } from "react-icons/bs";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { PiLightningFill } from "react-icons/pi";
+import { BiSolidEdit } from "react-icons/bi";
+import { AiOutlineFileDone } from "react-icons/ai";
+import { FiCheckCircle } from "react-icons/fi";
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -215,7 +219,7 @@ export default function Home() {
                   </div>
                 </Circle>
                 <Circle ref={div4Ref} className="size-20 z-10">
-                  <Image  src={productImgBeam} alt="Product Image" className="w-full h-auto scale-[4.5] max-[556px]:scale-[4.5]"/>
+                  <Image  src={productImgBeam} alt="Product Image" className="w-full h-auto scale-[4.5] max-[556px]:scale-[6]"/>
                 </Circle>
                 <Circle ref={div6Ref} className="relative z-40 select-none touch-manipulation">
                   <BiSolidCategoryAlt className="size-5" />
@@ -293,6 +297,77 @@ export default function Home() {
          <Image src={productLapImg} alt="Product Image" className="w-full h-auto border border-[1px] border-[var(--light-blur-grey-color)] rounded-tr-[1.3rem] rounded-tl-[1.3rem] [mask-image:linear-gradient(to_top,rgba(0,0,0,0)_-0%,#000_60%)] [mask-repeat:no-repeat] [mask-size:100%_100%] shadow-lg"/>
        </div>
      </section>
+
+    <section className="step-section">
+      <div className="container flex flex-wrap px-10 mt-20 mb-20 max-[768px]:mt-0 max-[768px]:mb-15 max-[556px]:px-5 w-full mx-auto">
+        <div className="flex flex-col items-center md:flex-row w-full h-fit md:space-x-10 space-y-10 md:space-y-0">
+          <div className="md:w-3/5 w-full md:pr-10 md:py-6">
+            <div className="flex relative pb-12">
+              <div className="h-full w-10 absolute inset-0 flex items-center justify-center">
+                <div className="h-full w-[2px] bg-[var(--white-glass-color)] pointer-events-none"></div>
+              </div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full border-1 border-[#6f6f6f] backdrop-blur-[5px] bg-[var(--light-dark-color)] inline-flex items-center justify-center text-white relative z-10">
+                <FaLocationDot />
+              </div>
+              <div className="flex-grow pl-4">
+                <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 1</h2>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Discover premium billboard spaces across cities. Use our interactive map to browse and filter by location, size, and visibility.</p>
+              </div>
+            </div>
+            <div className="flex relative pb-12">
+              <div className="h-full w-10 absolute inset-0 flex items-center justify-center">
+                <div className="h-full w-[2px] bg-[var(--white-glass-color)] pointer-events-none"></div>
+              </div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full border-1 border-[#6f6f6f] backdrop-blur-[5px] bg-[var(--light-dark-color)] inline-flex items-center justify-center text-white relative z-10">
+                 <BsCalendarCheck />
+              </div>
+              <div className="flex-grow pl-4">
+                <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 2</h2>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">View real-time availability and compare pricing instantly. Get detailed insights like audience reach, traffic count, and best time to advertise.</p>
+              </div>
+            </div>
+            <div className="flex relative pb-12">
+              <div className="h-full w-10 absolute inset-0 flex items-center justify-center">
+                <div className="h-full w-[2px] bg-[var(--white-glass-color)] pointer-events-none"></div>
+              </div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full border-1 border-[#6f6f6f] backdrop-blur-[5px] bg-[var(--light-dark-color)] inline-flex items-center justify-center text-white relative z-10">
+                <BiSolidEdit />
+              </div>
+              <div className="flex-grow pl-4">
+                <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 3</h2>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Choose your duration, format, and placement preferences. Our AI-powered recommendations help you select the most impactful spots.</p>
+              </div>
+            </div>
+            <div className="flex relative pb-12">
+              <div className="h-full w-10 absolute inset-0 flex items-center justify-center">
+                <div className="h-full w-[2px] bg-[var(--white-glass-color)] pointer-events-none"></div>
+              </div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full border-1 border-[#6f6f6f] backdrop-blur-[5px] bg-[var(--light-dark-color)] inline-flex items-center justify-center text-white relative z-10">
+                <AiOutlineFileDone/>
+              </div>
+              <div className="flex-grow pl-4">
+                <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 4</h2>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Review your selections and book your ad space securely. Get instant confirmation with digital proof and billing transparency.</p>
+              </div>
+            </div>
+            <div className="flex relative">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full border-1 border-[#6f6f6f] backdrop-blur-[5px] bg-[var(--light-dark-color)] inline-flex items-center justify-center text-white relative z-10">
+                <FiCheckCircle  />
+              </div>
+              <div className="flex-grow pl-4">
+                <h2 className="font-semibold  text-sm text-white mb-1 tracking-wider">Finish</h2>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Once approved, your brand goes live on the billboard network. Track performance and ROI from your personalized dashboard.</p>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-3/5 w-full flex items-center justify-center overflow-hidden">
+            <BackgroundGradientAnimation>
+             <Image src={productImgBeam} alt="Product Image" className="w-[25rem] max-[768px]:w-[20rem] absolute z-[100] top-15 left-1/2 -translate-x-1/2"/>
+            </BackgroundGradientAnimation>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section className="countdown-section flex flex-col items-center justify-center p-4 relative overflow-hidden">
       
