@@ -778,63 +778,95 @@ export default function Home() {
       </div>
     </section>
 
-    <section className="faq-section w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="faqs" ref={faqRef}>
-      <div className="faq-title mb-10 flex flex-col items-center text-center">
-        <h1 className="text-3xl max-[556px]:text-[2rem] font-bold text-white mb-3">
-          Frequently asked <span className="text-[var(--purple-color)]">questions</span>
-        </h1>
-      </div>
+   <section className="faq-section w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="faqs" ref={faqRef}>
+    <div className="faq-title mb-10 flex flex-col items-center text-center">
+      <h1 className="text-3xl max-[556px]:text-[2rem] font-bold text-white mb-3">
+        Frequently asked <span className="text-[var(--purple-color)]">questions</span>
+      </h1>
+    </div>
 
-      <div className="space-y-8 max-[570px]:space-y-6">
-        {faqData.map((faq, index) => (
+    <div className="space-y-8 max-[570px]:space-y-6">
+      {faqData.map((faq, index) => (
+        <div
+          key={index}
+          className="faq-item transition-shadow duration-200"
+        >
+        <button
+          className={`w-full px-6 py-5 max-[570px]:px-4 max-[570px]:py-3 text-left flex justify-between cursor-pointer items-center rounded-[5rem] border border-[var(--light-blur-grey-color)] ${
+            openIndex === index 
+              ? 'bg-gradient-to-b from-[#7f6af708] to-[#000000]' 
+              : 'bg-[var(--light-dark-color)]'
+          }`}
+          onClick={() => toggleAccordion(index)}
+          aria-expanded={openIndex === index}
+          aria-controls={`faq-content-${index}`}
+        >
+            <span className="text-sm max-[570px]:text-[.75rem] font-semibold text-white pr-4">
+              {index + 1}. {faq.question}
+            </span>
+            {openIndex === index ? (
+              <FaChevronUp 
+                className="flex-shrink-0 w-4 h-4 text-[var(--light-grey-color)] transition-transform duration-200" 
+                aria-hidden="true"
+              />
+            ) : (
+              <FaChevronDown 
+                className="flex-shrink-0 w-4 h-4 text-[var(--light-grey-color)] transition-transform duration-200" 
+                aria-hidden="true"
+              />
+            )}
+          </button>
+          
           <div
-            key={index}
-            className="faq-item transition-shadow duration-200"
-          >
-          <button
-            className={`w-full px-6 py-5 max-[570px]:px-4 max-[570px]:py-3 text-left flex justify-between cursor-pointer items-center rounded-[5rem] border border-[var(--light-blur-grey-color)] ${
+            id={`faq-content-${index}`}
+            className={`px-5 transition-all duration-300 ease-in-out bg-transparent ${
               openIndex === index 
-                ? 'bg-gradient-to-b from-[#7f6af708] to-[#000000]' 
-                : 'bg-[var(--light-dark-color)]'
+                ? 'opacity-100 max-h-96 pb-4' 
+                : 'opacity-0 max-h-0 overflow-hidden'
             }`}
-            onClick={() => toggleAccordion(index)}
-            aria-expanded={openIndex === index}
-            aria-controls={`faq-content-${index}`}
           >
-              <span className="text-sm max-[570px]:text-[.75rem] font-semibold text-white pr-4">
-                {index + 1}. {faq.question}
-              </span>
-              {openIndex === index ? (
-                <FaChevronUp 
-                  className="flex-shrink-0 w-4 h-4 text-[var(--light-grey-color)] transition-transform duration-200" 
-                  aria-hidden="true"
-                />
-              ) : (
-                <FaChevronDown 
-                  className="flex-shrink-0 w-4 h-4 text-[var(--light-grey-color)] transition-transform duration-200" 
-                  aria-hidden="true"
-                />
-              )}
-            </button>
-            
-            <div
-              id={`faq-content-${index}`}
-              className={`px-5 transition-all duration-300 ease-in-out bg-transparent ${
-                openIndex === index 
-                  ? 'opacity-100 max-h-96 pb-4' 
-                  : 'opacity-0 max-h-0 overflow-hidden'
-              }`}
-            >
-              <div className="pt-4">
-                <p className="text-[var(--light-grey-color)] text-sm leading-relaxed font-medium max-[570px]:text-[.75rem]">
-                  {faq.answer}
-                </p>
-              </div>
+            <div className="pt-4">
+              <p className="text-[var(--light-grey-color)] text-sm leading-relaxed font-medium max-[570px]:text-[.75rem]">
+                {faq.answer}
+              </p>
             </div>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section className="text-white my-10 flex items-center justify-center mx-5" ref={newsletterRef}>
+    <div className="max-w-2xl w-full text-center">
+      <h2 className="text-3xl max-[556px]:text-[2rem] font-bold text-white mb-3">
+        Get The Latest{" "}
+        <span className="text-[var(--purple-color)]">Update&apos;s and deals.</span>
+      </h2>
+
+      <p className="text-xs text-[var(--light-grey-color)] max-w-md mx-auto mb-10 leading-relaxed">
+        Stay updated with the latest travel tips, blog posts, and exclusive
+        deals. Subscribe to our newsletter and never miss an update.
+      </p>
+
+      <form className="flex items-center bg-[var(--light-dark-color)] rounded-full overflow-hidden shadow-md border border-[var(--light-blur-grey-color)] transition-all duration-300">
+        <div className="flex items-center flex-grow px-4">
+          <FiMail className="text-gray-400 w-5 h-5 mr-3" />
+          <input
+            type="email"
+            placeholder="Enter your E-mail Address"
+            className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
+        >
+          Subscribe
+        </button>
+      </form>
+    </div>
+  </section>
 
     <section className="text-white my-10 flex items-center justify-center mx-5" ref={newsletterRef}>
       <div className="max-w-2xl w-full text-center">
