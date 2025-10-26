@@ -1,7 +1,7 @@
 'use client'
 import "./globals.css";
 import '@fontsource-variable/urbanist';
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Pivot as Hamburger } from 'hamburger-react'
 import { motion, AnimatePresence } from "framer-motion";
 import logo from '../../public/media/images/bookadzone-logo.png'
@@ -53,7 +53,7 @@ export default function RootLayout({
 
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setShowPopup(true);
   };
