@@ -868,38 +868,6 @@ export default function Home() {
     </div>
   </section>
 
-  <section className="text-white my-10 flex items-center justify-center mx-5" ref={newsletterRef}>
-    <div className="max-w-2xl w-full text-center">
-      <h2 className="text-3xl max-[556px]:text-[2rem] font-bold text-white mb-3">
-        Get The Latest{" "}
-        <span className="text-[var(--purple-color)]">Update&apos;s and deals.</span>
-      </h2>
-
-      <p className="text-xs text-[var(--light-grey-color)] max-w-md mx-auto mb-10 leading-relaxed">
-        Stay updated with the latest travel tips, blog posts, and exclusive
-        deals. Subscribe to our newsletter and never miss an update.
-      </p>
-
-      <form className="flex items-center bg-[var(--light-dark-color)] rounded-full overflow-hidden shadow-md border border-[var(--light-blur-grey-color)] transition-all duration-300">
-        <div className="flex items-center flex-grow px-4">
-          <FiMail className="text-gray-400 w-5 h-5 mr-3" />
-          <input
-            type="email"
-            placeholder="Enter your E-mail Address"
-            className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
-        >
-          Subscribe
-        </button>
-      </form>
-    </div>
-  </section>
-
     {/* Parallax Background Elements */}
     <div className="parallax-bg fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>

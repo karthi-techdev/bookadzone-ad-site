@@ -90,12 +90,12 @@ export default function RootLayout({
       <body>
         {/* Navbar with smooth scroll effect */}
         <motion.div 
-          className="navbar fixed top-0 w-full z-9999999"
+          className="navbar fixed top-0 w-full z-100000"
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <nav className={`navbar bg-[var(--light-dark-color)] rounded-full mx-auto my-2 h-[3.75rem] px-4 md:px-8 py-3 md:py-2 flex items-center justify-between max-w-[100%] shadow-lg border border-[1px] border-[var(--light-blur-grey-color)] fixed top-[0.125rem] left-1/2 transform -translate-x-1/2 w-[98%] z-50 ${isScrolled ? "backdrop-blur-sm bg-opacity-95" : ""}`}>
+          <nav className={`navbar bg-[var(--light-dark-color)] rounded-full mx-auto my-2 h-[3.75rem] px-4 md:px-8 py-3 md:py-2 flex items-center justify-between max-w-[100%] shadow-lg border border-[1px] border-[var(--light-blur-grey-color)] fixed top-[0.125rem] left-1/2 transform -translate-x-1/2 w-[98%] z-10000000 ${isScrolled ? "backdrop-blur-sm bg-opacity-95" : ""}`}>
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -160,7 +160,7 @@ export default function RootLayout({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -50 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="mobile-menu fixed top-0 left-0 w-full backdrop-blur-[0.1875rem] h-screen bg-[#000000b3] relative z-50 flex flex-col p-30 gap-6 px-6"
+                className="mobile-menu fixed top-0 left-0 w-full backdrop-blur-[0.1875rem] h-screen bg-[#000000b3] relative z-50 flex flex-col p-30 gap-2 px-6"
               >
                 {menuItems.map((item, idx) => (
                   <motion.div 
