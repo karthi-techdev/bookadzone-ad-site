@@ -12,6 +12,11 @@
   --white-glass-color: #ffffff1f; 
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+
 body {
   background-color: var(--dark-color);
   font-family: 'Urbanist Variable', sans-serif;
@@ -66,4 +71,27 @@ body {
   100% {
     transform: translateY(-50%);
   }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
 }
