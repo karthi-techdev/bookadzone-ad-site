@@ -82,7 +82,7 @@ export default function RootLayout({
     { name: "Home", id: "home" },
     { name: "Features", id: "features" },
     { name: "How it works?", id: "how-it-works" },
-    { name: "Faq's", id: "faqs" }
+    { name: "Faq&apos;s", id: "faqs" }
   ];
 
   return (
@@ -95,7 +95,7 @@ export default function RootLayout({
           animate={{ y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <nav className={`navbar bg-[var(--light-dark-color)] rounded-full mx-auto my-2 h-[3.75rem] px-4 md:px-8 py-3 md:py-2 flex items-center justify-between max-w-[100%] shadow-lg border border-[1px] border-[var(--light-blur-grey-color)] fixed top-[0.125rem] left-1/2 transform -translate-x-1/2 w-[98%] z-1000 ${isScrolled ? "backdrop-blur-sm bg-opacity-95" : ""}`}>
+          <nav className={`navbar bg-[var(--light-dark-color)] rounded-full mx-auto my-2 h-[3.75rem] px-4 md:px-8 py-3 md:py-2 flex items-center justify-between max-w-[100%] shadow-lg border border-[1px] border-[var(--light-blur-grey-color)] fixed top-[0.125rem] left-1/2 transform -translate-x-1/2 w-[98%] z-50 ${isScrolled ? "backdrop-blur-sm bg-opacity-95" : ""}`}>
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -123,7 +123,7 @@ export default function RootLayout({
                       className={getLinkClass(item.id)}
                       onClick={() => handleLinkClick(item.id)}
                     >
-                      {item.name}
+                      {item.name === "Faq&apos;s" ? "Faq's" : item.name}
                     </Link>
                   </motion.div>
                 ))}
@@ -160,7 +160,7 @@ export default function RootLayout({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -50 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="mobile-menu fixed top-0 left-0 w-full backdrop-blur-[0.1875rem] h-screen bg-[#000000b3] relative z-50 flex flex-col p-30 gap-2 px-6"
+                className="mobile-menu fixed top-0 left-0 w-full backdrop-blur-[0.1875rem] h-screen bg-[#000000b3] relative z-50 flex flex-col p-30 gap-6 px-6"
               >
                 {menuItems.map((item, idx) => (
                   <motion.div 
@@ -174,7 +174,7 @@ export default function RootLayout({
                       className={getMobileLinkClass(item.id)}
                       onClick={() => handleLinkClick(item.id)}
                     >
-                      {item.name}
+                      {item.name === "Faq&apos;s" ? "Faq's" : item.name}
                     </Link>
                   </motion.div>
                 ))}
@@ -203,7 +203,7 @@ export default function RootLayout({
           <AnimatePresence>
             {open && (
               <motion.div
-                className="fixed inset-0 flex items-center justify-center z-10000 p-4"
+                className="fixed inset-0 flex items-center justify-center z-50 p-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -448,7 +448,7 @@ export default function RootLayout({
                 viewport={{ once: true }}
               >
                 <div className="flex flex-wrap justify-center md:justify-start gap-5 text-[var(--light-grey-color)]">
-                  {["Home", "Features", "How it works?", "Faq's", "info@bookadzone.com"].map((item, index) => (
+                  {["Home", "Features", "How it works?", "Faq&apos;s", "info@bookadzone.com"].map((item, index) => (
                     <motion.a
                       key={item}
                       href={item.includes("@") ? `mailto:${item}` : `#${item.toLowerCase().replace(/\s+/g, "-").replace("?", "").replace("'", "")}`}
@@ -465,7 +465,7 @@ export default function RootLayout({
                         }
                       }}
                     >
-                      {item}
+                      {item === "Faq&apos;s" ? "Faq's" : item}
                     </motion.a>
                   ))}
                 </div>
@@ -515,15 +515,15 @@ export default function RootLayout({
                   }
                 }}
               >
-            <div className="flex animate-[marquee_20s_linear_infinite]">
-              <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" />
-              <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" />
-            </div>
-
-            <div className="flex animate-[marquee_20s_linear_infinite]" aria-hidden="true">
-              <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" />
-              <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" />
-            </div>
+                <div className="flex animate-[marquee_20s_linear_infinite]"> 
+                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" /> 
+                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" /> 
+                </div> 
+                
+                <div className="flex animate-[marquee_20s_linear_infinite]" aria-hidden="true"> 
+                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" /> 
+                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" />
+                </div>
               </motion.div>
             </div>
           </motion.div>
