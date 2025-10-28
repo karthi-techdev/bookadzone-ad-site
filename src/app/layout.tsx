@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     description: 'Book ad spaces instantly across billboards, hoardings & digital screens. Join BookAdZone to simplify outdoor advertising.',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/favicon.ico',
         width: 1200,
         height: 630,
         alt: 'BookAdZone - Outdoor Advertising Made Simple',
@@ -93,11 +93,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '192x192', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '180x180', type: 'image/png' },
     ],
     shortcut: ['/favicon.ico'],
   },
