@@ -91,7 +91,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const targetDate = new Date('2026-03-31T00:00:00').getTime();
+    const targetDate = new Date('2026-08-31T00:00:00').getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
