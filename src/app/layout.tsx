@@ -5,10 +5,10 @@ import ClientLayout from "../components/ClientLayout";
 
 export const metadata: Metadata = {
   title: {
-    default: "BookAdZone - Instant Outdoor Ad Space Booking Platform | Launching Soon",
-    template: "%s | BookAdZone"
+    default: "BookAdZone | Your Outdoor Advertising AI Powerhouse",
+    template: "%s | BookAdZone AI"
   },
-  description: "Revolutionize outdoor advertising with BookAdZone. Instantly book billboards, hoardings & digital screens across multiple locations. Streamline your ad campaigns with our AI-powered platform. Join the waitlist for early access!",
+  description: "Modernize your outdoor advertising with BookAdZone. Get predictive AI insights and instantly book billboards, hoardings, & digital screens. Streamline your campaigns with our AI powerhouse platform. Join the waitlist for early access!",
   keywords: [
     "outdoor advertising",
     "billboard booking",
@@ -20,8 +20,19 @@ export const metadata: Metadata = {
     "advertising platform",
     "billboard ads",
     "outdoor media buying",
-    "digital signage",
-    "ad space marketplace"
+    "ad space marketplace",
+    "bus shelter ads",
+    "digital screens",
+    "highway billboards",
+    "OOH",
+    "outdoor ad booking",
+    "Banner ads",
+    "predictive AI advertising", 
+    "AI ad campaign", 
+    "advertising AI powerhouse", 
+    "modern outdoor advertising",
+    "AI media buying",
+    "AI insights" 
   ],
   authors: [{ name: "BookAdZone" }],
   creator: "BookAdZone",
@@ -40,22 +51,22 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://bookadzone.com',
     siteName: 'BookAdZone',
-    title: 'BookAdZone - Instant Outdoor Ad Space Booking Platform',
-    description: 'Book ad spaces instantly across billboards, hoardings & digital screens. Join BookAdZone to simplify outdoor advertising.',
+    title: 'BookAdZone: The AI Powerhouse for Outdoor Advertising', 
+    description: 'Modernize your OOH campaigns. Get predictive AI insights and book ad spaces instantly with the BookAdZone powerhouse.', 
     images: [
       {
-        url: '/favicon.ico',
+        url: '/favicon.ico', 
         width: 1200,
         height: 630,
-        alt: 'BookAdZone - Outdoor Advertising Made Simple',
+        alt: 'BookAdZone - AI-Powered Outdoor Advertising',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BookAdZone - Instant Outdoor Ad Space Booking',
-    description: 'Revolutionize your outdoor advertising campaigns. Book billboards & digital screens instantly.',
-    images: ['/twitter-image.jpg'],
+    title: 'BookAdZone: Your Outdoor Advertising AI Powerhouse', 
+    description: 'Modernize outdoor advertising with predictive AI insights. Book billboards & digital screens instantly with our powerhouse platform.', 
+    images: ['/twitter-image.jpg'], 
     creator: '@bookadzone',
   },
   robots: {
@@ -77,7 +88,7 @@ export const metadata: Metadata = {
   },
   category: 'advertising technology',
   classification: 'Advertising Platform',
-  abstract: 'BookAdZone is a revolutionary platform simplifying outdoor ad space booking for advertisers and agencies worldwide.',
+  abstract: 'BookAdZone is an AI powerhouse platform, offering predictive insights to modernize and simplify outdoor ad space booking for advertisers and agencies all over india.',
   referrer: 'origin-when-cross-origin',
   colorScheme: 'dark',
   themeColor: [
@@ -89,7 +100,6 @@ export const metadata: Metadata = {
     initialScale: 1,
     maximumScale: 1,
   },
-  manifest: '/manifest.json',
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -102,21 +112,21 @@ export const metadata: Metadata = {
     shortcut: ['/favicon.ico'],
   },
   appleWebApp: {
-    title: 'BookAdZone',
+    title: 'BookAdZone AI Powerhouse', 
     statusBarStyle: 'black-translucent',
     capable: true,
   },
   other: {
     'msapplication-TileColor': '#000000',
     'msapplication-config': '/browserconfig.xml',
-    'application-name': 'BookAdZone',
+    'application-name': 'BookAdZone AI Powerhouse', 
     'generator': 'Next.js',
     'revisit-after': '7 days',
     'rating': 'general',
     'distribution': 'global',
     'coverage': 'worldwide',
     'target': 'all',
-    'audience': 'advertisers, marketing agencies, media buyers',
+    'audience': 'advertisers, marketing agencies, media buyers, OOH specialists, AI-driven marketers', 
   }
 };
 
@@ -128,11 +138,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         
-        {/* Structured Data for SEO */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -140,10 +148,10 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "BookAdZone",
-              "alternateName": "Outdoor Ad Space Booking Platform",
+              "alternateName": "AI Outdoor Advertising Powerhouse", 
               "url": "https://bookadzone.com",
               "logo": "https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png",
-              "description": "Instant outdoor advertising space booking platform for billboards, hoardings and digital screens",
+              "description": "Modernize outdoor advertising with predictive AI insights. The BookAdZone powerhouse platform simplifies instant booking for billboards, hoardings, and digital screens.",
               "sameAs": [
                 "https://x.com/bookadzone",
                 "https://linkedin.com/company/bookadzone",
@@ -160,7 +168,9 @@ export default function RootLayout({
                 "Programmatic Advertising",
                 "Digital Signage",
                 "Media Buying",
-                "Ad Campaign Management"
+                "Ad Campaign Management",
+                "Predictive AI Insights", 
+                "Advertising Technology" 
               ]
             })
           }}
