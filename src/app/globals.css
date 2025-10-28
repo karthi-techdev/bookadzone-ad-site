@@ -20,6 +20,7 @@ html {
 body {
   background-color: var(--dark-color);
   font-family: 'Urbanist Variable', sans-serif;
+  overflow-x: hidden;
 }
 
 @media (min-width: 379px) and (max-width: 1050px) {
