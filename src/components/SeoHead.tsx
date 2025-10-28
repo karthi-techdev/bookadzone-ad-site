@@ -15,7 +15,7 @@ export default function SeoHead({
   description = 'Book ad spaces instantly across billboards, hoardings & digital screens. Join BookAdZone to simplify advertising—register now and get notified at launch!',
   url = 'https://bookadzone.com',
   image = 'https://bookadzone.com/og-image.jpg',
-  twitterHandle = '@BookAdZone',
+  twitterHandle = '@bookadzone',
 }: SeoHeadProps) {
   const jsonLd = {
     "@context": "https://schema.org" as const,
