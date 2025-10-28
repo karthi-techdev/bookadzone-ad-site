@@ -26,11 +26,9 @@ import { AiOutlineFileDone } from "react-icons/ai";
 import { FiCheckCircle,FiMail } from "react-icons/fi";
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
-// Import GSAP
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
@@ -480,7 +478,7 @@ export default function Home() {
 
                   <div className="product-img relative">
                   <Image src={productImg1} alt="Product Image" className="w-full h-auto mt-4 rounded-[1.5rem] mb-4 max-[970px]:mb-2 max-[970px]:mt-2 [mask-image:linear-gradient(to_top,rgba(0,0,0,0)_-0%,#000_50%)] [mask-repeat:no-repeat] [mask-size:100%_100%]"/>
-                  <Link href="/" className="absolute max-[1195px]:text-[.8rem] max-[1115px]:text-[.7rem] max-[950px]:text-[.6rem] max-[820px]:text-[.8rem] bottom-[-0.7rem] bg-[var(--purple-color)] text-white text-sm px-4 py-2 font-medium w-[100%] text-center rounded-full max-[680px]:text-[.7rem]">Explore Features</Link>
+                  <Link href="#features" className="absolute max-[1195px]:text-[.8rem] max-[1115px]:text-[.7rem] max-[950px]:text-[.6rem] max-[820px]:text-[.8rem] bottom-[-0.7rem] bg-[var(--purple-color)] text-white text-sm px-4 py-2 font-medium w-[100%] text-center rounded-full max-[680px]:text-[.7rem]">Explore Features</Link>
                   </div>
               </div>
             </div>
@@ -493,7 +491,7 @@ export default function Home() {
 
                   <div className="text-content">
                   <h2 className="text-[1.6rem] max-[1195px]:text-[1.4rem] font-medium mb-5 max-[1110px]:text-[1.3rem] max-[1110px]:mb-3 max-[1010px]:text-[1.2rem] max-[950px]:text-[1rem] max-[820px]:text-[1.8rem] max-[680px]:text-[1.5rem]"><span className="text-[var(--purple-color)]">Effortless </span>Ad Space Discovery</h2>
-                  <p className="text-[var(--light-grey-color)] text-xs max-[1195px]:text-[.7rem] max-[1115px]:text-[.6rem] mt-2 font-medium max-[970px]:text-[.5rem] max-[820px]:text-[.8rem] max-[680px]:text-[.7rem]">Browse verified listings, compare pricing, and book the perfect outdoor media spot all from your fingertips.</p>
+                  <p className="text-[var(--light-grey-color)] text-xs max-[1195px]:text-[.7rem] max-[1115px]:text-[.6rem] mt-2 font-medium max-[970px]:text-[.5rem] max-[820px]:text-[.8rem] max-[680px]:text-[.8rem]">Browse verified listings, compare pricing, and book the perfect outdoor media spot all from your fingertips.</p>
                   </div>
               </div>
             </div>
@@ -508,7 +506,7 @@ export default function Home() {
               <div className="feature-item rounded-xl text-white border border-[1px] border-[var(--light-blur-grey-color)] overflow-hidden bg-[var(--light-dark-color)]">
                   <div className="product-img relative flex flex-col justify-center items-center ">
                   <Image src={productImg4} alt="Product Image" className="w-full h-auto scale-[1.07]"/>
-                  <Link href="/" className="absolute bottom-[0.5rem] max-[1195px]:text-[.8rem] max-[950px]:text-[.6rem] bg-[var(--purple-color)] text-white text-sm max-[1115px]:text-[.7rem] px-4 py-2 font-medium w-[90%] text-center rounded-full max-[820px]:text-[.8rem] max-[680px]:text-[.7rem]"> View Nearby Ad Locations</Link>
+                  <Link href="javascript:void(0)" className="absolute bottom-[0.5rem] max-[1195px]:text-[.8rem] max-[950px]:text-[.6rem] bg-[var(--purple-color)] text-white text-sm max-[1115px]:text-[.7rem] px-4 py-2 font-medium w-[90%] text-center rounded-full max-[820px]:text-[.8rem] max-[680px]:text-[.7rem]"> View Nearby Ad Locations</Link>
                   </div>
               </div>
             </div>
@@ -517,7 +515,7 @@ export default function Home() {
               <div className="content h-[-webkit-fill-available] flex flex-col justify-between">
                   <div className="text-content">
                   <h2 className="text-[1.6rem] max-[1195px]:text-[1.4rem] font-medium max-[1110px]:text-[1.3rem] max-[1010px]:text-[1.2rem] max-[950px]:text-[1rem] max-[820px]:text-[1.8rem] max-[680px]:text-[1.5rem]">Book Hoardings in <span className="text-[var(--purple-color)]">Seconds</span></h2>
-                  <p className="text-[var(--light-grey-color)] text-xs mt-3 max-[1195px]:text-[.7rem] max-[1115px]:text-[.6rem] font-medium max-[1110px]:mt-2 max-[970px]:text-[.5rem] max-[820px]:text-[.8rem] max-[680px]:text-[.7rem]">Discover, compare, and instantly book billboard spaces with real-time availability.</p>
+                  <p className="text-[var(--light-grey-color)] text-xs mt-3 max-[1195px]:text-[.7rem] max-[1115px]:text-[.6rem] font-medium max-[1110px]:mt-2 max-[970px]:text-[.5rem] max-[820px]:text-[.8rem] max-[680px]:text-[.8rem]">Discover, compare, and instantly book billboard spaces with real-time availability.</p>
                   </div>
 
                   <div className="product-img relative">
@@ -535,12 +533,12 @@ export default function Home() {
               <div className="content flex flex-col gap-8 items-start max-[1145px]:gap-5 max-[992px]:flex-row max-[620px]:flex-col ">
                 <div className="content-box w-[70%] max-[992px]:w-[100%] max-[620px]:text-center">
                   <h3 className="text-[1rem] font-bold max-[1145px]:text-[.9rem] max-[992px]:text-[1.2rem] max-[768px]:text-[1rem]">01 Strategic Reach</h3>
-                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.7rem]">Find and book premium outdoor media spaces across top cities to maximize brand visibility.</p>
+                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.8rem] font-medium">Find and book premium outdoor media spaces across top cities to maximize brand visibility.</p>
                 </div>
 
                 <div className="content-box w-[70%] max-[992px]:w-[100%] max-[992px]:text-right max-[620px]:text-center">
                   <h3 className="text-[1rem] font-bold max-[1145px]:text-[.9rem] max-[992px]:text-[1.2rem] max-[768px]:text-[1rem]">02 Effortless Discovery</h3>
-                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.7rem]">Search locations, compare options, and secure your perfect ad spot in just a few clicks.</p>
+                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.8rem] font-medium">Search locations, compare options, and secure your perfect ad spot in just a few clicks.</p>
                 </div>
               </div>
 
@@ -551,22 +549,22 @@ export default function Home() {
               <div className="content flex flex-col gap-8 items-end max-[1145px]:gap-5 max-[992px]:flex-row max-[620px]:flex-col">
                 <div className="content-box w-[70%] max-[992px]:w-[100%] max-[620px]:text-center">
                   <h3 className="text-[1rem] font-bold max-[1145px]:text-[.9rem] max-[992px]:text-[1.2rem] max-[768px]:text-[1rem]">03 Smart Campaign Execution</h3>
-                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.7rem]">Manage creatives, bookings, and agencies all in one platform, hassle-free campaign management.</p>
+                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.8rem] font-medium">Manage creatives, bookings, and agencies all in one platform, hassle-free campaign management.</p>
                 </div>
 
                 <div className="content-box w-[70%] max-[992px]:w-[100%] max-[992px]:text-right max-[620px]:text-center">
                   <h3 className="text-[1rem] font-bold max-[1145px]:text-[.9rem] max-[992px]:text-[1.2rem] max-[768px]:text-[1rem]">04 Data-Driven Insights</h3>
-                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.7rem]">Track campaign performance with detailed analytics to optimize reach, engagement, and ROI.</p>
+                  <p className="text-[.7rem] text-[var(--light-grey-color)] max-[1145px]:text-[.6rem] max-[992px]:text-[.8rem] max-[768px]:text-[.8rem] font-medium">Track campaign performance with detailed analytics to optimize reach, engagement, and ROI.</p>
                 </div>
               </div>
           </div>
       </div>
     </section>
 
-    <section className="mobile-beam-section" id="features" ref={beamSectionRef}>
+    <section className="mobile-beam-section mt-40 max-[992px]:mt-20" id="features" ref={beamSectionRef}>
       <div className="title-head text-center flex flex-col">
         <span className="text-center text-[var(--light-grey-color)] font-semibold">Features</span>
-        <h3 className="text-[1.5rem] font-semibold mx-5">Your complete <span className="text-[var(--purple-color)]">Powerhouse</span> for outdoor ads.</h3>
+        <h3 className="text-3xl max-[556px]:text-[2rem] font-bold text-white mx-5">Your complete <span className="text-[var(--purple-color)]">Powerhouse</span> for outdoor ads.</h3>
       </div>
 
       <div className="animated-beam-container mt-5">
@@ -688,7 +686,7 @@ export default function Home() {
               </div>
               <div className="flex-grow pl-4">
                 <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 1</h2>
-                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Discover premium billboard spaces across cities. Use our interactive map to browse and filter by location, size, and visibility.</p>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium max-[680px]:text-[.8rem]">Discover premium billboard spaces across cities. Use our interactive map to browse and filter by location, size, and visibility.</p>
               </div>
             </div>
             <div className="step-item flex relative pb-12">
@@ -700,7 +698,7 @@ export default function Home() {
               </div>
               <div className="flex-grow pl-4">
                 <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 2</h2>
-                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">View real-time availability and compare pricing instantly. Get detailed insights like audience reach, traffic count, and best time to advertise.</p>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium max-[680px]:text-[.8rem]">View real-time availability and compare pricing instantly. Get detailed insights like audience reach, traffic count, and best time to advertise.</p>
               </div>
             </div>
             <div className="step-item flex relative pb-12">
@@ -712,7 +710,7 @@ export default function Home() {
               </div>
               <div className="flex-grow pl-4">
                 <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 3</h2>
-                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Choose your duration, format, and placement preferences. Our AI-powered recommendations help you select the most impactful spots.</p>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium max-[680px]:text-[.8rem]">Choose your duration, format, and placement preferences. Our AI-powered recommendations help you select the most impactful spots.</p>
               </div>
             </div>
             <div className="step-item flex relative pb-12">
@@ -724,7 +722,7 @@ export default function Home() {
               </div>
               <div className="flex-grow pl-4">
                 <h2 className="font-semibold text-sm text-white mb-1 tracking-wider">Step 4</h2>
-                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Review your selections and book your ad space securely. Get instant confirmation with digital proof and billing transparency.</p>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium max-[680px]:text-[.8rem]">Review your selections and book your ad space securely. Get instant confirmation with digital proof and billing transparency.</p>
               </div>
             </div>
             <div className="step-item flex relative">
@@ -733,7 +731,7 @@ export default function Home() {
               </div>
               <div className="flex-grow pl-4">
                 <h2 className="font-semibold  text-sm text-white mb-1 tracking-wider">Finish</h2>
-                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium">Once approved, your brand goes live on the billboard network. Track performance and ROI from your personalized dashboard.</p>
+                <p className="leading-relaxed text-[var(--light-grey-color)] text-xs font-medium max-[680px]:text-[.8rem]">Once approved, your brand goes live on the billboard network. Track performance and ROI from your personalized dashboard.</p>
               </div>
             </div>
           </div>
@@ -753,7 +751,7 @@ export default function Home() {
           <span className="text-[#7F6AF7]">Next&#8208;Gen Billboard Experience</span> Arrives Soon&#33;
         </h3>
         
-        <p className="countdown-text text-xs text-[var(--light-grey-color)] max-w-md mx-auto mb-10 leading-relaxed">
+        <p className="countdown-text text-xs text-[var(--light-grey-color)] max-w-md mx-auto mb-10 leading-relaxed max-[680px]:text-[.8rem] font-medium">
           Revolutionizing how brands connect with people&#x2c; get ready for the transformation.
         </p>
 
@@ -826,7 +824,7 @@ export default function Home() {
             }`}
           >
             <div className="pt-4">
-              <p className="text-[var(--light-grey-color)] text-sm leading-relaxed font-medium max-[570px]:text-[.75rem]">
+              <p className="text-[var(--light-grey-color)] text-sm leading-relaxed font-medium max-[570px]:text-[.75rem] max-[680px]:text-[.8rem] font-medium">
                 {faq.answer}
               </p>
             </div>
@@ -843,7 +841,7 @@ export default function Home() {
         <span className="text-[var(--purple-color)]">Update&apos;s and deals.</span>
       </h2>
 
-      <p className="text-xs text-[var(--light-grey-color)] max-w-md mx-auto mb-10 leading-relaxed">
+      <p className="text-xs text-[var(--light-grey-color)] max-w-md mx-auto mb-10 leading-relaxed max-[680px]:text-[.8rem] font-medium">
         Stay updated with the latest travel tips, blog posts, and exclusive
         deals. Subscribe to our newsletter and never miss an update.
       </p>
