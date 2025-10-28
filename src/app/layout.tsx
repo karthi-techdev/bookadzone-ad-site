@@ -448,7 +448,7 @@ export default function RootLayout({
                 viewport={{ once: true }}
               >
                 <div className="flex flex-wrap justify-center md:justify-start gap-5 text-[var(--light-grey-color)]">
-                  {["Home", "Features", "How it works?", "Faq&apos;s", "info@bookadzone.com"].map((item, index) => (
+                  {["Home", "Features", "How it works?", "Faq&apos;s", "contact@bookadzone.com"].map((item, index) => (
                     <motion.a
                       key={item}
                       href={item.includes("@") ? `mailto:${item}` : `#${item.toLowerCase().replace(/\s+/g, "-").replace("?", "").replace("'", "")}`}
