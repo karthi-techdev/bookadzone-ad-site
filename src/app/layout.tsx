@@ -9,6 +9,8 @@ import mobilelogo from '../../public/media/images/ba-png.png'
 import Link from "next/link";
 import { IoClose } from "react-icons/io5";
 import { FaInstagram, FaTwitter, FaLinkedinIn, FaFacebookF } from "react-icons/fa";
+import SeoHead from "@/components/SeoHead";
+
 
 export default function RootLayout({
   children,
@@ -87,6 +89,11 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <SeoHead 
+          url="https://bookadzone.com"
+          image="https://bookadzone.com/images/bookadzone-og.jpg"
+          twitterHandle="@bookadzone"
+        />
       <body>
         {/* Navbar with smooth scroll effect */}
         <motion.div 
