@@ -1,8 +1,9 @@
 'use client'
 import { motion } from "framer-motion";
 import logo from '../../public/media/images/bookadzone-logo.png'
-import { FaInstagram, FaTwitter, FaLinkedinIn, FaFacebookF } from "react-icons/fa";
+import { FaInstagram, FaLinkedinIn, FaFacebookF } from "react-icons/fa";
 import { useState } from "react";
+import { FaXTwitter } from "react-icons/fa6";
 
 
 export default function Footer() {
@@ -33,16 +34,18 @@ export default function Footer() {
                 viewport={{ once: true }}
               >
                 <p className="font-medium">Follow us</p>
-                <div className="flex gap-4 text-xl">
+               <div className="flex gap-4 text-xl">
                   {[
-                    { icon: <FaInstagram />, label: "Instagram" },
-                    { icon: <FaTwitter />, label: "Twitter" },
-                    { icon: <FaLinkedinIn />, label: "LinkedIn" },
-                    { icon: <FaFacebookF />, label: "Facebook" }
+                    { icon: <FaInstagram />, label: "Instagram", link: "https://www.instagram.com/bookadzone/" },
+                    { icon: <FaXTwitter />, label: "Twitter", link: "https://x.com/bookadzone" },
+                    { icon: <FaLinkedinIn />, label: "LinkedIn", link: "https://www.linkedin.com/company/bookadzone/" },
+                    { icon: <FaFacebookF />, label: "Facebook", link: "https://www.facebook.com/people/Bookadzone/61583101444332/" }
                   ].map((social, index) => (
                     <motion.a
                       key={social.label}
-                      href="#"
+                      href={social.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       aria-label={social.label}
                       className="border border-[var(--light-blur-grey-color)] p-2 rounded-[.5rem] transition-colors duration-300 hover:bg-gradient-to-b hover:from-[#473E7E] hover:to-[#000000]"
                       whileHover={{ scale: 1.1, y: -2 }}
