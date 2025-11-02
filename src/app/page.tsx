@@ -61,6 +61,8 @@ interface FAQItem {
 }
 
 export default function Home() {
+  const [subscribeError, setSubscribeError] = useState<string>('');
+  const [subscribeSuccess, setSubscribeSuccess] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null)
   const div1Ref = useRef<HTMLDivElement>(null)
   const div2Ref = useRef<HTMLDivElement>(null)
@@ -846,22 +848,90 @@ export default function Home() {
         deals. Subscribe to our newsletter and never miss an update.
       </p>
 
-      <form className="flex items-center bg-[var(--light-dark-color)] rounded-full overflow-hidden shadow-md border border-[var(--light-blur-grey-color)] transition-all duration-300">
-        <div className="flex items-center flex-grow px-4">
-          <FiMail className="text-gray-400 w-5 h-5 mr-3" />
-          <input
-            type="email"
-            placeholder="Enter your E-mail Address"
-            className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
-            required
-          />
+      <form 
+        className="flex flex-col gap-2"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const email = (form.querySelector('input[type="email"]') as HTMLInputElement).value;
+
+          if (!email.trim()) {
+            setSubscribeError('Email is required');
+            return;
+          }
+
+          if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            setSubscribeError('Please enter a valid email');
+            return;
+          }
+
+          try {
+            const response = await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              if (response.status === 409) {
+                setSubscribeError('This email is already subscribed');
+              } else {
+                setSubscribeError(data.error || 'Failed to subscribe');
+              }
+              return;
+            }
+
+            // Success
+            setSubscribeError('');
+            setSubscribeSuccess(true);
+            form.reset();
+            setTimeout(() => setSubscribeSuccess(false), 3000);
+
+          } catch (error) {
+            setSubscribeError('Failed to subscribe. Please try again.');
+          }
+        }}
+      >
+        <div className="flex items-center bg-[var(--light-dark-color)] rounded-full overflow-hidden shadow-md border border-[var(--light-blur-grey-color)] transition-all duration-300"
+             style={{ borderColor: subscribeError ? 'rgb(239, 68, 68)' : '' }}>
+          <div className="flex items-center flex-grow px-4">
+            <FiMail className="text-gray-400 w-5 h-5 mr-3" />
+            <input
+              type="email"
+              placeholder="Enter your E-mail Address"
+              className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
+              onChange={(e) => {
+                const value = e.target.value.trim();
+                if (subscribeError) setSubscribeError('');
+                
+                if (!value) {
+                  setSubscribeError('Email is required');
+                } else if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                  setSubscribeError('Please enter a valid email');
+                } else {
+                  setSubscribeError('');
+                }
+              }}
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
+            disabled={!!subscribeError}
+          >
+            Subscribe
+          </button>
         </div>
-        <button
-          type="submit"
-          className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
-        >
-          Subscribe
-        </button>
+        {subscribeError && (
+          <p className="text-red-500 text-xs px-4">{subscribeError}</p>
+        )}
+        {subscribeSuccess && (
+          <p className="text-green-500 text-xs px-4">Successfully subscribed!</p>
+        )}
       </form>
     </div>
   </section>

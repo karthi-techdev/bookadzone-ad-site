@@ -6,6 +6,8 @@ import logo from '../../public/media/images/bookadzone-logo.png'
 import mobilelogo from '../../public/media/images/ba-png.png'
 import Link from "next/link";
 import { IoClose } from "react-icons/io5";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Navbar() {
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,10 +45,294 @@ export default function Navbar() {
       }, []);
     
       const [showPopup, setShowPopup] = useState(false);
+      const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+      const [touched, setTouched] = useState<{[key: string]: boolean}>({});
+      const [isLoading, setIsLoading] = useState(false);
+      const [formData, setFormData] = useState({
+        fullName: '',
+        companyName: '',
+        position: '',
+        email: '',
+        profileType: 'Select Advertiser or Agency'
+      });
+
+      const handleBlur = (fieldName: string) => {
+        setTouched(prev => ({ ...prev, [fieldName]: true }));
+        
+        // Re-validate just this field
+        const value = formData[fieldName as keyof typeof formData];
+        const event = {
+          target: { name: fieldName, value }
+        } as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
+        
+        handleChange(event);
+      };
+
+      const [lastValidation, setLastValidation] = useState<{[key: string]: 'required' | 'length' | 'format'}>({});
+
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = event.target;
+
+        // Update form data first
+        setFormData(prev => ({
+          ...prev,
+          [name]: value
+        }));
+
+        // Mark field as touched
+        setTouched(prev => ({
+          ...prev,
+          [name]: true
+        }));
+
+        // Validate the field using the common validation function
+        const { error, validationType } = validateField(value, name);
+
+        // Update validation state
+        if (error && validationType) {
+          setLastValidation(prev => ({ ...prev, [name]: validationType }));
+          setFormErrors(prev => ({ ...prev, [name]: error }));
+        } else {
+          // Clear validation and errors for this field
+          setLastValidation(prev => {
+            const newValidation = { ...prev };
+            delete newValidation[name];
+            return newValidation;
+          });
+          setFormErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[name];
+            return newErrors;
+          });
+        }
+      };
+
+      const validateAllFields = () => {
+        const form = document.querySelector('form') as HTMLFormElement;
+        if (!form) return;
+
+        const formData = new FormData(form);
+        const validationErrors: {[key: string]: string} = {};
+        const newValidation: {[key: string]: any} = {};
+        
+        // Mark all fields as touched to show all errors
+        const fields = ['fullName', 'companyName', 'position', 'email', 'profileType'];
+        const newTouched = fields.reduce((acc, field) => ({ ...acc, [field]: true }), {});
+        setTouched(newTouched);
+        
+        // Validate each field
+        fields.forEach(field => {
+          const value = formData.get(field)?.toString() || '';
+          const { error, validationType } = validateField(value, field);
+          if (error) {
+            validationErrors[field] = error;
+            if (validationType) {
+              newValidation[field] = validationType;
+            }
+          }
+        });
+
+        setLastValidation(prev => ({ ...prev, ...newValidation }));
+
+        // First pass: check for required errors
+        fields.forEach(field => {
+          const value = formData.get(field)?.toString().trim() || '';
+          if (value === '') {
+            switch(field) {
+              case 'fullName':
+              case 'companyName':
+                validationErrors[field] = `${field === 'fullName' ? 'Full name' : 'Company name'} is required`;
+                setLastValidation(prev => ({ ...prev, [field]: 'required' }));
+                break;
+              case 'position':
+                validationErrors.position = 'Position is required';
+                setLastValidation(prev => ({ ...prev, position: 'required' }));
+                break;
+              case 'email':
+                validationErrors.email = 'Email is required';
+                setLastValidation(prev => ({ ...prev, email: 'required' }));
+                break;
+              case 'profileType':
+                if (!value || value === '' || value === 'Select Advertiser or Agency') {
+                  validationErrors.profileType = 'Profile type is required';
+                  setLastValidation(prev => ({ ...prev, profileType: 'required' }));
+                }
+                break;
+            }
+          }
+        });
+
+        // Second pass: check for other validation errors only if not already showing required error
+        fields.forEach(field => {
+          const value = formData.get(field)?.toString().trim() || '';
+          if (value !== '' && !validationErrors[field]) {
+            switch(field) {
+              case 'fullName':
+              case 'companyName':
+                if (value.length < 2) {
+                  validationErrors[field] = `${field === 'fullName' ? 'Full name' : 'Company name'} must be at least 2 characters long`;
+                  setLastValidation(prev => ({ ...prev, [field]: 'length' }));
+                }
+                break;
+              case 'email':
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                  validationErrors.email = 'Please enter a valid email';
+                  setLastValidation(prev => ({ ...prev, email: 'format' }));
+                }
+                break;
+            }
+          }
+        });
+
+        setFormErrors(validationErrors);
+      };
+
+      const validateField = (value: string, fieldName: string) => {
+        const trimmedValue = value.trim();
+        let error = '';
+        let validationType: Extract<typeof lastValidation[keyof typeof lastValidation], string> | undefined;
+
+        // First check for required errors
+        if (trimmedValue === '') {
+          switch(fieldName) {
+            case 'fullName':
+            case 'companyName':
+              error = `${fieldName === 'fullName' ? 'Full name' : 'Company name'} is required`;
+              validationType = 'required';
+              break;
+            case 'position':
+              error = 'Position is required';
+              validationType = 'required';
+              break;
+            case 'email':
+              error = 'Email is required';
+              validationType = 'required';
+              break;
+            case 'profileType':
+              if (value === 'Select Advertiser or Agency') {
+                error = 'Profile type is required';
+                validationType = 'required';
+              }
+              break;
+          }
+        }
+
+        // Then check for other validation errors if no required error
+        if (!error) {
+          switch(fieldName) {
+            case 'fullName':
+            case 'companyName':
+              if (trimmedValue.length < 2) {
+                error = `${fieldName === 'fullName' ? 'Full name' : 'Company name'} must be at least 2 characters long`;
+                validationType = 'length';
+              }
+              break;
+            case 'email':
+              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)) {
+                error = 'Please enter a valid email';
+                validationType = 'format';
+              }
+              break;
+            case 'profileType':
+              if (value === 'Select Advertiser or Agency') {
+                error = 'Profile type is required';
+                validationType = 'required';
+              }
+              break;
+          }
+        }
+
+        return { error, validationType };
+      };
     
-      const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+      const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setShowPopup(true);
+        const form = e.currentTarget;
+        
+        // Run validation before submission
+        validateAllFields();
+        
+        // Check if there are any validation errors
+        if (Object.keys(formErrors).length > 0) {
+          return;
+        }
+        
+        setIsLoading(true);
+        const formData = new FormData(form);
+        
+        try {
+          const formValues = {
+            fullName: (formData.get('fullName') as string)?.trim() || '',
+            companyName: (formData.get('companyName') as string)?.trim() || '',
+            position: (formData.get('position') as string)?.trim() || '',
+            email: (formData.get('email') as string)?.trim().toLowerCase() || '',
+            profileType: formData.get('profileType') as string || '',
+          };
+
+          // Validate with API first
+          const validationResponse = await fetch('/api/notify/validate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formValues),
+          });
+
+          const validationResult = await validationResponse.json();
+          
+          if (!validationResponse.ok) {
+            setFormErrors(validationResult.errors || {});
+            return;
+          }
+
+          console.log('Submitting form data:', formValues);
+          
+          // Clear previous errors
+          setFormErrors({});
+
+          const response = await fetch('/api/notify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formValues),
+          });
+
+          const data = await response.json();
+          console.log('Server response:', data);
+
+          if (!response.ok) {
+            if (response.status === 409) {
+              setFormErrors({ email: 'This email is already registered for notifications' });
+              return;
+            }
+            if (data.validationErrors) {
+              setFormErrors(data.validationErrors);
+              return;
+            }
+            setFormErrors({ submit: data.error || 'Failed to submit form' });
+            return;
+          }
+
+          console.log('Form submission successful:', data);
+          setFormErrors({});
+          setShowPopup(true);
+          setFormData({
+            fullName: '',
+            companyName: '',
+            position: '',
+            email: '',
+            profileType: 'Select Advertiser or Agency'
+          });
+          form.reset();
+          setIsLoading(false);
+        } catch (error: any) {
+          console.error('Error submitting form:', error);
+          setFormErrors({
+            submit: error.message || 'Failed to submit form. Please try again.'
+          });
+          setIsLoading(false);
+        }
       };
     
       const handleLinkClick = (section: string) => {
@@ -75,6 +361,18 @@ export default function Navbar() {
 
     return (
      <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <motion.div 
           className="navbar fixed top-0 w-full z-100000"
           initial={{ y: -100 }}
@@ -115,7 +413,18 @@ export default function Navbar() {
                 ))}
               </div>
               <motion.button 
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                  setOpen(true);
+                  setFormErrors({});
+                  setTouched({});
+                  setFormData({
+                    fullName: '',
+                    companyName: '',
+                    position: '',
+                    email: '',
+                    profileType: 'Select Advertiser or Agency'
+                  });
+                }}
                 className="text-[0.875rem] text-white w-[8.125rem] p-[0.625rem] cursor-pointer rounded-[1.375rem] bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] transition-colors"
                 whileHover={{ 
                   scale: 1.05,
@@ -176,6 +485,7 @@ export default function Navbar() {
                     onClick={() => {
                       setOpen(true);
                       setIsMobileMenuOpen(false);
+                      setFormErrors({}); // Clear any existing form errors
                     }}
                   >
                     Get Notified
@@ -196,7 +506,10 @@ export default function Navbar() {
               >
                 <motion.div
                   className="absolute inset-0 bg-black/60 backdrop-blur-md"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    setFormErrors({}); // Clear form errors when closing via backdrop
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -233,13 +546,19 @@ export default function Navbar() {
                     </motion.p>
                   </div>
 
-                  <form className="space-y-3" onSubmit={handleSubmit}>
+                  <form 
+                    className="space-y-2" 
+                    onSubmit={handleSubmit} 
+                    noValidate 
+                    autoComplete="off"
+                    onFocus={() => validateAllFields()} // Validate all fields when form gets focus
+                    >
                     {[
-                      { label: "Full Name", type: "text", placeholder: "Enter your full name" },
-                      { label: "Profile Type", type: "select", options: ["Select Advertiser or Agency", "Advertiser", "Agency"] },
-                      { label: "Company Name", type: "text", placeholder: "Enter company name" },
-                      { label: "Position", type: "text", placeholder: "Enter your position" },
-                      { label: "Email Address", type: "email", placeholder: "Enter your email" }
+                      { label: "Full Name", type: "text", placeholder: "Enter your full name", name: "fullName" },
+                      { label: "Company Name", type: "text", placeholder: "Enter company name", name: "companyName" },
+                      { label: "Position", type: "text", placeholder: "Enter your position", name: "position" },
+                      { label: "Email Address", type: "email", placeholder: "Enter your email", name: "email" },
+                      { label: "Profile Type", type: "select", options: ["Select Advertiser or Agency", "Advertiser", "Agency"], name: "profileType" }
                     ].map((field, index) => (
                       <motion.div
                         key={field.label}
@@ -251,33 +570,95 @@ export default function Navbar() {
                           {field.label}
                         </label>
                         {field.type === "select" ? (
-                          <select className="w-full px-3 py-2.5 text-xs rounded-lg bg-[var(--dark-color)] border border-[var(--light-blur-grey-color)] text-white focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:border-transparent transition-all duration-200">
-                            {field.options?.map(option => (
-                              <option key={option} value={option} className="text-[var(--light-grey-color)]">
-                                {option}
-                              </option>
-                            ))}
-                          </select>
+                          <div>
+                            <select 
+                              name={field.name}
+                              className={`w-full px-3 py-[0.688rem] text-xs rounded-lg bg-[var(--dark-color)] border ${formErrors[field.name] ? 'border-red-500' : 'border-[var(--light-blur-grey-color)]'} text-white focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:border-transparent transition-all duration-200 ${formData[field.name as keyof typeof formData] === 'Select Advertiser or Agency' ? 'text-[var(--light-grey-color)]' : ''}`}
+                              onChange={(e) => {
+                                handleChange(e);
+                                // Immediately mark as touched on change for select and validate
+                                setTouched(prev => ({ ...prev, [field.name]: true }));
+                                if (e.target.value === 'Select Advertiser or Agency') {
+                                  setFormErrors(prev => ({
+                                    ...prev,
+                                    [field.name]: 'Profile type is required'
+                                  }));
+                                  setLastValidation(prev => ({ ...prev, [field.name]: 'required' }));
+                                }
+                              }}
+                              onBlur={() => handleBlur(field.name)}
+                              value={formData[field.name as keyof typeof formData]}
+                            >
+                              {field.options?.map(option => (
+                                <option key={option} value={option} className="text-[var(--light-grey-color)]">
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                            <motion.p 
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ 
+                                opacity: formErrors[field.name] && touched[field.name] ? 1 : 0,
+                                height: formErrors[field.name] && touched[field.name] ? 'auto' : 0
+                              }}
+                              className="text-red-500 text-[10px] px-1 min-h-[16px] transition-all duration-200"
+                            >
+                              {formErrors[field.name]}
+                            </motion.p>
+                          </div>
                         ) : (
-                          <input
-                            type={field.type}
-                            placeholder={field.placeholder}
-                            className="w-full px-3 py-2.5 text-xs rounded-lg bg-[var(--dark-color)] border border-[var(--light-blur-grey-color)] text-white placeholder-[var(--light-grey-color)] focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:border-transparent transition-all duration-200"
-                          />
+                          <div className="space-y-1">
+                            <input
+                              type={field.type}
+                              name={field.name}
+                              placeholder={field.placeholder}
+                              value={formData[field.name as keyof typeof formData]}
+                              className={`w-full px-3 py-2.5 text-xs rounded-lg bg-[var(--dark-color)] border ${formErrors[field.name] && touched[field.name] ? 'border-red-500' : 'border-[var(--light-blur-grey-color)]'} text-white placeholder-[var(--light-grey-color)] focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:border-transparent transition-all duration-200`}
+                              onChange={handleChange}
+                              onBlur={() => handleBlur(field.name)}
+                            />
+                            <motion.p 
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ 
+                                  opacity: formErrors[field.name] ? 1 : 0,
+                                  height: formErrors[field.name] ? 'auto' : 0
+                                }}
+                                className="text-red-500 text-[10px] px-1 min-h-[16px] transition-all duration-200"
+                              >
+                                {formErrors[field.name] || ''}
+                              </motion.p>
+                          </div>
                         )}
                       </motion.div>
                     ))}
 
+                    {formErrors.submit && (
+                      <p className="text-red-500 text-xs text-center">
+                        {formErrors.submit}
+                      </p>
+                    )}
                     <motion.button
                       type="submit"
-                      className="w-full py-3 rounded-lg bg-[var(--purple-color)] text-white text-xs font-semibold hover:bg-[var(--light-purple-color)] transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:ring-offset-2 focus:ring-offset-[var(--light-dark-color)] shadow-lg mt-4"
+                      disabled={isLoading}
+                      className={`w-full py-3 rounded-lg bg-[var(--purple-color)] text-white text-xs font-semibold transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:ring-offset-2 focus:ring-offset-[var(--light-dark-color)] shadow-lg mt-4 flex items-center justify-center gap-2 ${isLoading ? 'opacity-90 cursor-not-allowed' : 'hover:bg-[var(--light-purple-color)]'}`}
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.5 }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                      whileTap={{ scale: isLoading ? 1 : 0.98 }}
                     >
-                      Notify Me at Launch
+                      {isLoading ? (
+                        <>
+                          <motion.div
+                            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          />
+                          <span>Submitting...</span>
+                        </>
+                      ) : (
+                        "Notify Me at Launch"
+                      )}
                     </motion.button>
                   </form>
 
@@ -315,7 +696,18 @@ export default function Navbar() {
                   </AnimatePresence>
 
                   <motion.button
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false);
+                      setFormErrors({});
+                      setTouched({});
+                      setFormData({
+                        fullName: '',
+                        companyName: '',
+                        position: '',
+                        email: '',
+                        profileType: 'Select Advertiser or Agency'
+                      });
+                    }}
                     className="absolute top-4 right-4 w-7 h-7 rounded-full border border-[var(--light-blur-grey-color)] flex items-center justify-center text-[var(--light-grey-color)] hover:text-white hover:border-white transition-all duration-200 text-lg"
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
