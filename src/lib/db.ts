@@ -54,10 +54,6 @@ export async function connectToDatabase() {
     return cached.conn;
   } catch (e) {
     cached.promise = null;
-    console.error('Database connection error:', {
-      error: e instanceof Error ? e.message : String(e),
-      stack: e instanceof Error ? e.stack : undefined
-    });
-    throw new Error('Failed to connect to database. Please try again later.');
+    throw e;
   }
 }

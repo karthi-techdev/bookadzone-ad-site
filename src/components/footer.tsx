@@ -1,18 +1,16 @@
-'use client'
+"use client"
 import { motion } from "framer-motion";
+import Image from 'next/image'
 import logo from '../../public/media/images/bookadzone-logo.png'
 import { FaInstagram, FaLinkedinIn, FaFacebookF } from "react-icons/fa";
-import { useState } from "react";
 import { FaXTwitter } from "react-icons/fa6";
 
 
 export default function Footer() {
-     const [activeSection, setActiveSection] = useState("home");
-     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+     // scroll to section on click (no local state needed in footer)
      const handleLinkClick = (section: string) => {
-        setActiveSection(section);
-        setIsMobileMenuOpen(false);
+        const el = document.getElementById(section);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
       };
 
     return (
@@ -127,10 +125,12 @@ export default function Footer() {
                   whileHover={{ scale: 1.05 }}
                   onClick={() => handleLinkClick("home")}
                 >
-                  <img
-                    src={logo.src}
+                  <Image
+                    src={logo}
                     alt="bookadzone Logo"
                     className="h-[1.07rem] object-contain"
+                    width={80}
+                    height={18}
                   />
                 </motion.a>
               </motion.p>
@@ -159,13 +159,13 @@ export default function Footer() {
                 }}
               >
                 <div className="flex animate-[marquee_20s_linear_infinite]"> 
-                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" /> 
-                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" /> 
+                  <Image className="w-[80rem] opacity-50 flex-shrink-0" src={logo} alt="BookAdZone Logo" width={1280} height={120} /> 
+                  <Image className="w-[80rem] opacity-50 flex-shrink-0" src={logo} alt="BookAdZone Logo" width={1280} height={120} /> 
                 </div> 
                 
                 <div className="flex animate-[marquee_20s_linear_infinite]" aria-hidden="true"> 
-                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" /> 
-                  <img className="w-[80rem] opacity-50 flex-shrink-0" src={logo.src} alt="BookAdZone Logo" />
+                  <Image className="w-[80rem] opacity-50 flex-shrink-0" src={logo} alt="BookAdZone Logo" width={1280} height={120} /> 
+                  <Image className="w-[80rem] opacity-50 flex-shrink-0" src={logo} alt="BookAdZone Logo" width={1280} height={120} />
                 </div>
               </motion.div>
             </div>

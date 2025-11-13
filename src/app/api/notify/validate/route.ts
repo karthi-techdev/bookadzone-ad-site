@@ -1,47 +1,74 @@
 import { NextResponse } from 'next/server';
 
+interface FormData {
+  fullName: string;
+  profileType: string;
+  companyName: string;
+  position: string;
+  email: string;
+}
+
+function validateFormData(data: FormData) {
+  const errors: Record<string, string> = {};
+
+  // Validate Full Name
+  if (!data.fullName || data.fullName.trim() === '') {
+    errors.fullName = 'Full name must be at least 2 characters long';
+  } else if (data.fullName.trim().length < 2) {
+    errors.fullName = 'Full name must be at least 2 characters long';
+  }
+
+  // Validate Profile Type
+  if (!data.profileType || data.profileType === 'Select Advertiser or Agency') {
+    errors.profileType = 'Please select your profile type';
+  }
+
+  // Validate Company Name
+  if (!data.companyName || data.companyName.trim() === '') {
+    errors.companyName = 'Company name must be at least 2 characters long';
+  } else if (data.companyName.trim().length < 2) {
+    errors.companyName = 'Company name must be at least 2 characters long';
+  }
+
+  // Validate Position
+  if (!data.position || data.position.trim() === '') {
+    errors.position = 'Please enter your position';
+  }
+
+  // Validate Email
+  if (!data.email || data.email.trim() === '') {
+    errors.email = 'Please enter your email';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    errors.email = 'Please enter a valid email';
+  }
+
+  return errors;
+}
+
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
-    const errors: { [key: string]: string } = {};
+    const body = await request.json();
+    const validationErrors = validateFormData(body);
 
-    // Validate required fields
-    const requiredFields = ['fullName', 'companyName', 'position', 'email', 'profileType'];
-    requiredFields.forEach(field => {
-      if (!data[field] || data[field].trim() === '') {
-        errors[field] = `${field === 'profileType' ? 'Profile type' : field} is required`;
-      }
+    // If there are validation errors
+    if (Object.keys(validationErrors).length > 0) {
+      return NextResponse.json(
+        { success: false, errors: validationErrors },
+        { status: 400 }
+      );
+    }
+
+    // If validation passes
+    return NextResponse.json({
+      success: true,
+      data: body
     });
 
-    // Validate email format
-    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      errors.email = 'Please enter a valid email address';
-    }
-
-    // Validate name lengths
-    if (data.fullName && data.fullName.trim().length < 2) {
-      errors.fullName = 'Full name must be at least 2 characters long';
-    }
-    if (data.companyName && data.companyName.trim().length < 2) {
-      errors.companyName = 'Company name must be at least 2 characters long';
-    }
-
-    // Validate profile type
-    if (data.profileType === 'Select Advertiser or Agency') {
-      errors.profileType = 'Please select a profile type';
-    }
-
-    // Return validation result
-    if (Object.keys(errors).length > 0) {
-      return NextResponse.json({ errors }, { status: 400 });
-    }
-
-    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Validation error:', error);
     return NextResponse.json(
-      { error: 'Invalid request data' },
-      { status: 400 }
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
     );
   }
 }

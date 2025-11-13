@@ -28,13 +28,10 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof globalThis.window !== 'undefined') {
+if (globalThis.window !== undefined) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface InfoSectionProps {
-  className?: string;
-}
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -54,13 +51,11 @@ const Circle = forwardRef<
 })
 Circle.displayName = "Circle"
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
+// Removed unused types to quiet TypeScript lints
 
 export default function Home() {
-  const isBrowser = typeof globalThis.window !== 'undefined';
+  const [subscribeError, setSubscribeError] = useState<string>('');
+  const [subscribeSuccess, setSubscribeSuccess] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null)
   const div1Ref = useRef<HTMLDivElement>(null)
   const div2Ref = useRef<HTMLDivElement>(null)
@@ -85,8 +80,7 @@ export default function Home() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [subscribeError, setSubscribeError] = useState<string>('');
-  const [subscribeSuccess, setSubscribeSuccess] = useState<boolean>(false);
+  // subscription UI state
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toggleAccordion = (index: number) => {
@@ -865,7 +859,6 @@ export default function Home() {
       <form 
         className="flex flex-col gap-2"
         onSubmit={async (e) => {
-          if (!isBrowser) return;
           e.preventDefault();
           const form = e.currentTarget;
           const email = (form.querySelector('input[type="email"]') as HTMLInputElement).value;
@@ -874,9 +867,8 @@ export default function Home() {
             setSubscribeError('Email is required');
             return;
           }
-
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.exec(email)) {
+          if (!emailRegex.test(email)) {
             setSubscribeError('Please enter a valid email');
             return;
           }
@@ -907,14 +899,8 @@ export default function Home() {
             setSubscribeSuccess(true);
             form.reset();
             setTimeout(() => setSubscribeSuccess(false), 3000);
-
-          } catch (error) {
-            console.error('Subscription error:', error);
-            if (error instanceof Error) {
-              setSubscribeError(`Failed to subscribe: ${error.message}`);
-            } else {
-              setSubscribeError('Failed to subscribe. Please try again.');
-            }
+          } catch {
+            setSubscribeError('Failed to subscribe. Please try again.');
           } finally {
             setIsLoading(false);
           }
@@ -929,17 +915,17 @@ export default function Home() {
               placeholder="Enter your E-mail Address"
               className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
               onChange={(e) => {
-                const value = e.target.value.trim();
-                if (subscribeError) setSubscribeError('');
-                
-                if (!value) {
-                  setSubscribeError('Email is required');
-                } else if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).exec(value)) {
-                  setSubscribeError('Please enter a valid email');
-                } else {
-                  setSubscribeError('');
-                }
-              }}
+                  const value = e.target.value.trim();
+                  if (subscribeError) setSubscribeError('');
+
+                  if (!value) {
+                    setSubscribeError('Email is required');
+                  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    setSubscribeError('Please enter a valid email');
+                  } else {
+                    setSubscribeError('');
+                  }
+                }}
             />
           </div>
           <button
@@ -947,7 +933,7 @@ export default function Home() {
             className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
             disabled={!!subscribeError || isLoading}
           >
-            {isLoading ? 'Subscribing...' : 'Subscribe'}
+            Subscribe
           </button>
         </div>
         {subscribeError && (

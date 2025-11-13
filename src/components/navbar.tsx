@@ -2,10 +2,13 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Pivot as Hamburger } from 'hamburger-react'
 import { motion, AnimatePresence } from "framer-motion";
+import Image from 'next/image'
 import logo from '../../public/media/images/bookadzone-logo.png'
 import mobilelogo from '../../public/media/images/ba-png.png'
 import Link from "next/link";
 import { IoClose } from "react-icons/io5";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Navbar() {
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -34,7 +37,7 @@ export default function Navbar() {
     
         window.addEventListener("scroll", handleScroll);
         
-        const hash = window.location.hash.replace('#', '');
+        const hash = (globalThis.location?.hash ?? '').replace('#', '');
         if (hash && ["home", "features", "how-it-works", "faqs"].includes(hash)) {
           setActiveSection(hash);
         }
@@ -53,7 +56,8 @@ export default function Navbar() {
         email: '',
         profileType: 'Select Advertiser or Agency'
       });
-            const handleBlur = (fieldName: string) => {
+
+      const handleBlur = (fieldName: string) => {
         setTouched(prev => ({ ...prev, [fieldName]: true }));
         
         // Re-validate just this field
@@ -65,7 +69,9 @@ export default function Navbar() {
         handleChange(event);
       };
 
-      const [lastValidation, setLastValidation] = useState<{[key: string]: 'required' | 'length' | 'format'}>({});
+  // central validation type used across the form
+  type ValidationType = 'required' | 'length' | 'format';
+  const [, setLastValidation] = useState<Record<string, ValidationType>>({});
 
       const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -109,17 +115,18 @@ export default function Navbar() {
         if (!form) return;
 
         const formData = new FormData(form);
-        const validationErrors: {[key: string]: string} = {};
-        const newValidation: {[key: string]: 'required' | 'length' | 'format'} = {};
+  const validationErrors: {[key: string]: string} = {};
+  type ValidationType = 'required' | 'length' | 'format';
+  const newValidation: Record<string, ValidationType> = {};
         
         // Mark all fields as touched to show all errors
         const fields = ['fullName', 'companyName', 'position', 'email', 'profileType'];
         const newTouched = fields.reduce((acc, field) => ({ ...acc, [field]: true }), {});
         setTouched(newTouched);
-        
+
         // Validate each field
-        fields.forEach(field => {
-          const value = formData.get(field)?.toString() || '';
+        for (const field of fields) {
+          const value = String(formData.get(field) ?? '');
           const { error, validationType } = validateField(value, field);
           if (error) {
             validationErrors[field] = error;
@@ -127,13 +134,13 @@ export default function Navbar() {
               newValidation[field] = validationType;
             }
           }
-        });
+        }
 
         setLastValidation(prev => ({ ...prev, ...newValidation }));
 
         // First pass: check for required errors
-        fields.forEach(field => {
-          const value = formData.get(field)?.toString().trim() || '';
+        for (const field of fields) {
+          const value = String(formData.get(field) ?? '').trim();
           if (value === '') {
             switch(field) {
               case 'fullName':
@@ -157,11 +164,11 @@ export default function Navbar() {
                 break;
             }
           }
-        });
+        }
 
         // Second pass: check for other validation errors only if not already showing required error
-        fields.forEach(field => {
-          const value = formData.get(field)?.toString().trim() || '';
+        for (const field of fields) {
+          const value = String(formData.get(field) ?? '').trim();
           if (value !== '' && !validationErrors[field]) {
             switch(field) {
               case 'fullName':
@@ -179,7 +186,7 @@ export default function Navbar() {
                 break;
             }
           }
-        });
+        }
 
         setFormErrors(validationErrors);
       };
@@ -187,7 +194,7 @@ export default function Navbar() {
       const validateField = (value: string, fieldName: string) => {
         const trimmedValue = value.trim();
         let error = '';
-        let validationType: Extract<typeof lastValidation[keyof typeof lastValidation], string> | undefined;
+  let validationType: ValidationType | undefined;
 
         // First check for required errors
         if (trimmedValue === '') {
@@ -225,7 +232,7 @@ export default function Navbar() {
               }
               break;
             case 'email':
-              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)) {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)) {
                 error = 'Please enter a valid email';
                 validationType = 'format';
               }
@@ -255,71 +262,80 @@ export default function Navbar() {
         }
         
         setIsLoading(true);
+        const formData = new FormData(form);
         
-        // Create form values directly from state to avoid FormData processing
-        const formValues = {
-          fullName: formData.fullName.trim(),
-          companyName: formData.companyName.trim(),
-          position: formData.position.trim(),
-          email: formData.email.trim().toLowerCase(),
-          profileType: formData.profileType,
-        };
+        try {
+                const formValues = {
+            fullName: String(formData.get('fullName') ?? '').trim(),
+            companyName: String(formData.get('companyName') ?? '').trim(),
+            position: String(formData.get('position') ?? '').trim(),
+            email: String(formData.get('email') ?? '').trim().toLowerCase(),
+            profileType: String(formData.get('profileType') ?? ''),
+          };
 
-          try {
-            // Submit directly without separate validation
-            const response = await fetch('/api/notify', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formValues),
-            });
-
-            const responseData = await response.json().catch(() => ({}));
-
-            if (!response.ok) {
-              if (response.status === 409) {
-                setFormErrors({ email: 'This email is already registered for notifications' });
-                return;
-              }
-              
-              if (responseData.errors) {
-                setFormErrors(responseData.errors);
-                return;
-              }
-
-              if (responseData.error) {
-                console.error('Server error:', responseData.error);
-                setFormErrors({ submit: responseData.error });
-                return;
-              }
-              
-              throw new Error('An unexpected error occurred. Please try again.');
-            }
-          
-            // Check if there's a warning about email sending
-            if (responseData.warning) {
-              console.warn('Email warning:', responseData.warning);
-            }
-            
-            // Success! Clear form and show success message
-            setFormErrors({});
-            setShowPopup(true);
-            setFormData({
-              fullName: '',
-              companyName: '',
-              position: '',
-              email: '',
-              profileType: 'Select Advertiser or Agency'
-            });
-            form.reset();
-
-        } catch (error) {
-          console.error('Error submitting form:', error);
-          setFormErrors({
-            submit: error instanceof Error ? error.message : 'Failed to submit form. Please try again.'
+          // Validate with API first
+          const validationResponse = await fetch('/api/notify/validate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formValues),
           });
-        } finally {
+
+          const validationResult = await validationResponse.json();
+          
+          if (!validationResponse.ok) {
+            setFormErrors(validationResult.errors || {});
+            return;
+          }
+
+          console.log('Submitting form data:', formValues);
+          
+          // Clear previous errors
+          setFormErrors({});
+
+          const response = await fetch('/api/notify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formValues),
+          });
+
+          const data = await response.json();
+          console.log('Server response:', data);
+
+          if (!response.ok) {
+            if (response.status === 409) {
+              setFormErrors({ email: 'This email is already registered for notifications' });
+              return;
+            }
+            if (data.validationErrors) {
+              setFormErrors(data.validationErrors);
+              return;
+            }
+            setFormErrors({ submit: data.error || 'Failed to submit form' });
+            return;
+          }
+
+          console.log('Form submission successful:', data);
+          setFormErrors({});
+          setShowPopup(true);
+          setFormData({
+            fullName: '',
+            companyName: '',
+            position: '',
+            email: '',
+            profileType: 'Select Advertiser or Agency'
+          });
+          form.reset();
+          setIsLoading(false);
+        } catch (error: unknown) {
+          const err = error instanceof Error ? error : new Error(String(error));
+          console.error('Error submitting form:', err);
+          setFormErrors({
+            submit: err.message || 'Failed to submit form. Please try again.'
+          });
           setIsLoading(false);
         }
       };
@@ -350,6 +366,18 @@ export default function Navbar() {
 
     return (
      <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <motion.div 
           className="navbar fixed top-0 w-full z-100000"
           initial={{ y: -100 }}
@@ -366,8 +394,8 @@ export default function Navbar() {
                 className="text-2xl font-bold text-white"
                 onClick={() => handleLinkClick("home")}
               >
-                <img className="hidden md:block w-[8.4375rem]" src={logo.src} alt="BookAdZone Logo" />
-                <img className="block md:hidden w-[3.125rem]" src={mobilelogo.src} alt="BookAdZone" />
+                <Image className="hidden md:block w-[8.4375rem]" src={logo} alt="BookAdZone Logo" width={135} height={40} />
+                <Image className="block md:hidden w-[3.125rem]" src={mobilelogo} alt="BookAdZone" width={50} height={50} />
               </Link>
             </motion.div>
 
@@ -390,7 +418,18 @@ export default function Navbar() {
                 ))}
               </div>
               <motion.button 
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                  setOpen(true);
+                  setFormErrors({});
+                  setTouched({});
+                  setFormData({
+                    fullName: '',
+                    companyName: '',
+                    position: '',
+                    email: '',
+                    profileType: 'Select Advertiser or Agency'
+                  });
+                }}
                 className="text-[0.875rem] text-white w-[8.125rem] p-[0.625rem] cursor-pointer rounded-[1.375rem] bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] transition-colors"
                 whileHover={{ 
                   scale: 1.05,
@@ -425,7 +464,7 @@ export default function Navbar() {
               >
                 {menuItems.map((item, idx) => (
                   <motion.div 
-                    key={idx}
+                    key={item.id}
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: idx * 0.1 + 0.2 }}
@@ -451,6 +490,7 @@ export default function Navbar() {
                     onClick={() => {
                       setOpen(true);
                       setIsMobileMenuOpen(false);
+                      setFormErrors({}); // Clear any existing form errors
                     }}
                   >
                     Get Notified
@@ -471,7 +511,10 @@ export default function Navbar() {
               >
                 <motion.div
                   className="absolute inset-0 bg-black/60 backdrop-blur-md"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    setFormErrors({}); // Clear form errors when closing via backdrop
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -658,7 +701,18 @@ export default function Navbar() {
                   </AnimatePresence>
 
                   <motion.button
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false);
+                      setFormErrors({});
+                      setTouched({});
+                      setFormData({
+                        fullName: '',
+                        companyName: '',
+                        position: '',
+                        email: '',
+                        profileType: 'Select Advertiser or Agency'
+                      });
+                    }}
                     className="absolute top-4 right-4 w-7 h-7 rounded-full border border-[var(--light-blur-grey-color)] flex items-center justify-center text-[var(--light-grey-color)] hover:text-white hover:border-white transition-all duration-200 text-lg"
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
