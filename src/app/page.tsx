@@ -930,10 +930,18 @@ export default function Home() {
           </div>
           <button
             type="submit"
-            className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
+            className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3 flex items-center justify-center gap-2"
             disabled={!!subscribeError || isLoading}
+            aria-busy={isLoading}
           >
-            Subscribe
+            {isLoading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                <span>Submitting...</span>
+              </>
+            ) : (
+              "Subscribe"
+            )}
           </button>
         </div>
         {subscribeError && (
