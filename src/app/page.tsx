@@ -11,7 +11,7 @@ import productImgLaptop from '../../public/media/images/baz-img-laptop.png'
 import productImgBeam from '../../public/media/images/baz-img-beam.png'
 import productLapImg from '../../public/media/images/baz-laptop-content-search.jpg'
 import Link from "next/link";
-import React, { forwardRef, useRef, useState, useCallback, useEffect } from "react"
+import React, { forwardRef, useRef, useState, useEffect } from "react"
 import { cn } from "../lib/utils"
 import { AnimatedBeam } from "../components/ui/animated-beam"
 import { BackgroundGradientAnimation } from "../components/ui/background-gradient-animation";
@@ -19,9 +19,8 @@ import { RiAiGenerate2 } from "react-icons/ri";
 import { IoQrCode } from "react-icons/io5";
 import { FaLocationDot } from "react-icons/fa6";
 import { BsCalendarCheck } from "react-icons/bs";
-import { BiSolidCategoryAlt } from "react-icons/bi";
+import { BiSolidCategoryAlt, BiSolidEdit } from "react-icons/bi";
 import { PiLightningFill } from "react-icons/pi";
-import { BiSolidEdit } from "react-icons/bi";
 import { AiOutlineFileDone } from "react-icons/ai";
 import { FiCheckCircle,FiMail } from "react-icons/fi";
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
@@ -29,13 +28,10 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof window !== 'undefined') {
+if (globalThis.window !== undefined) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface InfoSectionProps {
-  className?: string;
-}
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -55,12 +51,11 @@ const Circle = forwardRef<
 })
 Circle.displayName = "Circle"
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
+// Removed unused types to quiet TypeScript lints
 
 export default function Home() {
+  const [subscribeError, setSubscribeError] = useState<string>('');
+  const [subscribeSuccess, setSubscribeSuccess] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null)
   const div1Ref = useRef<HTMLDivElement>(null)
   const div2Ref = useRef<HTMLDivElement>(null)
@@ -85,6 +80,8 @@ export default function Home() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // subscription UI state
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -94,7 +91,7 @@ export default function Home() {
     const targetDate = new Date('2026-08-31T00:00:00').getTime();
 
     const updateCountdown = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const difference = targetDate - now;
 
       if (difference > 0) {
@@ -435,28 +432,41 @@ export default function Home() {
 
     // Clean up ScrollTrigger instances
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      for (const trigger of ScrollTrigger.getAll()) {
+        trigger.kill();
+      }
     };
   }, []);
 
+  interface FAQItem {
+    id: string;
+    question: string;
+    answer: string;
+  }
+
   const faqData: FAQItem[] = [
     {
+      id: "faq-1",
       question: "How do I book a billboard through Bookadzone?",
       answer: "Simply search for your desired location, compare available ad spaces, and click \"Book Now.\" Upload your creative and confirm the booking in just a few clicks."
     },
     {
+      id: "faq-2",
       question: "Can I see the availability of ad spaces in real-time?",
       answer: "Yes, our platform provides real-time availability updates for all ad spaces. You can see which locations are available for your desired dates instantly."
     },
     {
+      id: "faq-3",
       question: "What types of ad spaces can I book?",
       answer: "We offer various ad space types including billboards, digital displays, transit ads, and indoor advertising spaces. Each type comes with detailed specifications."
     },
     {
+      id: "faq-4",
       question: "How do I know which location is best for my campaign?",
       answer: "Our platform provides analytics and insights for each location, including traffic data, audience demographics, and performance metrics to help you make informed decisions."
     },
     {
+      id: "faq-5",
       question: "Do I need to coordinate separately with agencies?",
       answer: "No, Bookadzone handles all coordination with property owners and agencies. You can manage your entire campaign through our unified platform."
     }
@@ -786,7 +796,7 @@ export default function Home() {
     <div className="space-y-8 max-[570px]:space-y-6">
       {faqData.map((faq, index) => (
         <div
-          key={index}
+          key={faq.id}
           className="faq-item transition-shadow duration-200"
         >
         <button
@@ -846,22 +856,92 @@ export default function Home() {
         deals. Subscribe to our newsletter and never miss an update.
       </p>
 
-      <form className="flex items-center bg-[var(--light-dark-color)] rounded-full overflow-hidden shadow-md border border-[var(--light-blur-grey-color)] transition-all duration-300">
-        <div className="flex items-center flex-grow px-4">
-          <FiMail className="text-gray-400 w-5 h-5 mr-3" />
-          <input
-            type="email"
-            placeholder="Enter your E-mail Address"
-            className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
-            required
-          />
+      <form 
+        className="flex flex-col gap-2"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const email = (form.querySelector('input[type="email"]') as HTMLInputElement).value;
+
+          if (!email.trim()) {
+            setSubscribeError('Email is required');
+            return;
+          }
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            setSubscribeError('Please enter a valid email');
+            return;
+          }
+
+          setIsLoading(true);
+          try {
+            const response = await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              if (response.status === 409) {
+                setSubscribeError('This email is already subscribed');
+              } else {
+                setSubscribeError(data.error || 'Failed to subscribe');
+              }
+              return;
+            }
+
+            // Success
+            setSubscribeError('');
+            setSubscribeSuccess(true);
+            form.reset();
+            setTimeout(() => setSubscribeSuccess(false), 3000);
+          } catch {
+            setSubscribeError('Failed to subscribe. Please try again.');
+          } finally {
+            setIsLoading(false);
+          }
+        }}
+      >
+        <div className="flex items-center bg-[var(--light-dark-color)] rounded-full overflow-hidden shadow-md border border-[var(--light-blur-grey-color)] transition-all duration-300"
+             style={{ borderColor: subscribeError ? 'rgb(239, 68, 68)' : '' }}>
+          <div className="flex items-center flex-grow px-4">
+            <FiMail className="text-gray-400 w-5 h-5 mr-3" />
+            <input
+              type="email"
+              placeholder="Enter your E-mail Address"
+              className="bg-transparent w-full py-3 text-sm text-gray-200 placeholder-gray-400 focus:outline-none"
+              onChange={(e) => {
+                  const value = e.target.value.trim();
+                  if (subscribeError) setSubscribeError('');
+
+                  if (!value) {
+                    setSubscribeError('Email is required');
+                  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    setSubscribeError('Please enter a valid email');
+                  } else {
+                    setSubscribeError('');
+                  }
+                }}
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
+            disabled={!!subscribeError || isLoading}
+          >
+            Subscribe
+          </button>
         </div>
-        <button
-          type="submit"
-          className="bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-semibold px-10 py-3 rounded-full transition-all duration-300 max-[556px]:px-7 max-[556px]:py-3"
-        >
-          Subscribe
-        </button>
+        {subscribeError && (
+          <p className="text-red-500 text-xs px-4">{subscribeError}</p>
+        )}
+        {subscribeSuccess && (
+          <p className="text-green-500 text-xs px-4">Successfully subscribed!</p>
+        )}
       </form>
     </div>
   </section>
