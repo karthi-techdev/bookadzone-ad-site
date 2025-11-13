@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Subscriber from '@/models/Subscriber';
 import { connectToDatabase } from '@/lib/db';
+import { sendSubscriptionEmail } from '@/lib/subscriptionMail';
 
 export async function POST(request: Request) {
   try {
@@ -29,6 +30,14 @@ export async function POST(request: Request) {
     // Create new subscriber
     const subscriber = new Subscriber({ email });
     await subscriber.save();
+
+    // Send confirmation email (do not fail subscription if email sending fails)
+    try {
+      const emailResult = await sendSubscriptionEmail(email);
+      console.log('Subscription confirmation email sent:', emailResult);
+    } catch (mailErr) {
+      console.warn('Failed to send subscription confirmation email:', mailErr);
+    }
 
     return NextResponse.json(
       { success: true, message: 'Successfully subscribed!' },

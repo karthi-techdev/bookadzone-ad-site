@@ -34,7 +34,7 @@ const getWelcomeEmailTemplate = (name: string) => `
                 <table border="0" cellpadding="0" cellspacing="0" width="600" class="wrapper" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                     <tr>
                         <td align="center" bgcolor="#7C3AED" style="padding: 40px 20px; border-radius: 8px 8px 0 0;">
-                            <img src="https://bookadzone.com/logo.png" alt="BookAdZone Logo" style="max-width: 200px; height: auto;">
+                            <img src="https://bookadzone.com/media/images/bookadzone-logo.png" alt="BookAdZone Logo" style="max-width: 200px; height: auto;">
                         </td>
                     </tr>
 
