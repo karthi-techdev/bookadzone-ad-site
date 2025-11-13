@@ -46,6 +46,8 @@ export default function Navbar() {
       }, []);
     
       const [showPopup, setShowPopup] = useState(false);
+      const [advertisersCount, setAdvertisersCount] = useState<number>(356);
+      const [agenciesCount, setAgenciesCount] = useState<number>(127);
       const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
       const [touched, setTouched] = useState<{[key: string]: boolean}>({});
       const [isLoading, setIsLoading] = useState(false);
@@ -248,6 +250,25 @@ export default function Navbar() {
 
         return { error, validationType };
       };
+
+      // Fetch aggregated counts (defaults + DB) for display
+      useEffect(() => {
+        let mounted = true;
+        (async () => {
+          try {
+            const res = await fetch('/api/notify');
+            if (!res.ok) return;
+            const json = await res.json();
+            if (!mounted) return;
+            if (typeof json.advertisers === 'number') setAdvertisersCount(json.advertisers);
+            if (typeof json.agencies === 'number') setAgenciesCount(json.agencies);
+          } catch (e) {
+            // ignore and keep defaults
+            console.warn('Could not fetch notify counts', e);
+          }
+        })();
+        return () => { mounted = false };
+      }, []);
     
       const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -726,7 +747,7 @@ export default function Navbar() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.6 }}
                   >
-                    <p>Already <span className="text-[var(--purple-color)] font-semibold">356 Advertisers</span> and <span className="text-[var(--purple-color)] font-semibold">127 Agencies</span> have subscribed.</p>
+                    <p>Already <span className="text-[var(--purple-color)] font-semibold">{advertisersCount} Advertisers</span> and <span className="text-[var(--purple-color)] font-semibold">{agenciesCount} Agencies</span> have subscribed.</p>
                   </motion.div>
                 </motion.div>
               </motion.div>

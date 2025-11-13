@@ -222,3 +222,27 @@ export async function POST(request: Request) {
         );
     }
 }
+
+export async function GET() {
+    try {
+        await connectToDatabase();
+
+        // Defaults requested by the UI
+        const defaultAdvertisers = 356;
+        const defaultAgencies = 127;
+
+        // Aggregate counts from NotificationSignup collection
+        const advertisersCount = await NotificationSignup.countDocuments({ profileType: 'Advertiser' });
+        const agenciesCount = await NotificationSignup.countDocuments({ profileType: 'Agency' });
+
+        return NextResponse.json({
+            advertisers: defaultAdvertisers + (advertisersCount || 0),
+            agencies: defaultAgencies + (agenciesCount || 0),
+        }, { status: 200 });
+    } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        console.error('Failed to get notify counts:', err.message);
+        // Return defaults if DB unavailable
+        return NextResponse.json({ advertisers: 356, agencies: 127 }, { status: 200 });
+    }
+}
