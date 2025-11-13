@@ -44,8 +44,9 @@ export async function POST(request: Request) {
       { status: 201 }
     );
 
-  } catch (error) {
-    console.error('Subscription error:', error);
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error('Subscription error:', { message: err.message, stack: err.stack });
     return NextResponse.json(
       { success: false, error: 'Failed to subscribe. Please try again.' },
       { status: 500 }

@@ -2,9 +2,17 @@ import nodemailer from 'nodemailer';
 
 export async function sendSubscriptionEmail(userEmail: string) {
   try {
+    // Log the configuration being used
+    console.log('Subscription email config:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_SECURE,
+      user: process.env.SMTP_USER ? '***' : 'undefined',
+    });
+
     // Create transporter
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT) || 587,
       secure: process.env.SMTP_SECURE === 'true',
       auth: {
@@ -79,10 +87,13 @@ export async function sendSubscriptionEmail(userEmail: string) {
     const info = await transporter.sendMail(mailOptions);
     console.log('Subscription confirmation email sent:', info.messageId);
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
     console.error('Error sending subscription email:', {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
+      error: err.message,
+      stack: err.stack,
+      name: err.name,
+      code: (error as Record<string, unknown>)?.code,
     });
     // Return false instead of throwing to prevent the subscription process from failing
     return false;
