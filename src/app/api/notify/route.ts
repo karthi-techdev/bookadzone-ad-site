@@ -61,9 +61,11 @@ const getLocationFromIp = async (ip: string): Promise<ILocation | null> => {
     } else {
       console.warn('GeoIP failed:', data.message);
     }
-  } catch (err: any) {
-    console.error('GeoIP request failed:', err.message);
-  }
+  }  catch (error) {
+  const err = error instanceof Error ? error : new Error(String(error));
+  console.error('GeoIP request failed:', err.message);
+}
+
 
   return { city: 'Unknown', country: 'Unknown', region: 'Unknown' };
 };
@@ -294,9 +296,8 @@ export async function GET() {
       advertisers: defaultAdvertisers + (advertisersCount || 0),
       agencies: defaultAgencies + (agenciesCount || 0),
     }, { status: 200 });
-  } catch (error: unknown) {
-    const err = error instanceof Error ? error : new Error(String(error));
-    console.error('Failed to get notify counts:', err.message);
-    return NextResponse.json({ advertisers: 356, agencies: 127 }, { status: 200 });
-  }
+  }  catch (error) {
+  const err = error instanceof Error ? error : new Error(String(error));
+  console.error('GeoIP request failed:', err.message);
+}
 }
