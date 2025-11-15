@@ -2,7 +2,18 @@ import nodemailer from 'nodemailer';
 
 export async function sendSubscriptionEmail(userEmail: string) {
   try {
-    // Log the configuration being used
+    // simple HTML escape for insertion into template
+    const escapeHtml = (s: string) => String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+    // Use the email address prefix as a display name fallback (before the @)
+    const displayName = String(userEmail).split('@')[0] || 'Subscriber';
+
+    // Log config (masked) for debugging
     console.log('Subscription email config:', {
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
@@ -10,7 +21,6 @@ export async function sendSubscriptionEmail(userEmail: string) {
       user: process.env.SMTP_USER ? '***' : 'undefined',
     });
 
-    // Create transporter
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT) || 587,
@@ -21,69 +31,59 @@ export async function sendSubscriptionEmail(userEmail: string) {
       },
     });
 
-    // Email content with modern, engaging design
+    // Reuse the same design used elsewhere (dark themed)
     const mailOptions = {
       from: process.env.SMTP_FROM || '"BookAdZone" <noreply@bookadzone.com>',
       to: userEmail,
-      subject: 'Welcome to BookAdZone Newsletter! 🎉',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0D0D0D; color: #FFFFFF; padding: 30px; border-radius: 10px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #7F6AF7; margin-bottom: 10px;">Thanks for Subscribing!</h1>
-            <p style="color: #98A9B8; font-size: 16px; line-height: 1.5;">
-              Welcome to the BookAdZone community! You're now part of our growing network of outdoor advertising enthusiasts.
-            </p>
-          </div>
+      subject: 'Thanks for subscribing to BookAdZone',
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to BookAdZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body style="margin:0; padding:0; background-color:#080411; color:#FFFFFF; font-family:'Urbanist', Arial, sans-serif;">
+  <center style="width:100%; background-color:#080411; padding:30px 0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; background-color:#080411; border-radius:16px;">
+      <tr>
+        <td align="center" style="padding:20px 30px;">
+          <!-- Logo -->
+          <img src="https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png" alt="BookAdZone Logo" width="180" style="display:block; margin-bottom:20px;" />
+          <h1 style="font-size:26px; font-weight:700; color:#7F6AF7; margin:0;">We're Launching Soon!</h1>
+          <p style="font-size:14px; color:#98A9B8; margin:10px 0 25px;">Be the first to know when we go live</p>
+        </td>
+      </tr>
 
-          <div style="background-color: #1A1A1A; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-            <h2 style="color: #FFFFFF; font-size: 18px; margin-bottom: 15px;">What to Expect:</h2>
-            <ul style="color: #98A9B8; list-style: none; padding: 0;">
-              <li style="margin-bottom: 10px; padding-left: 20px; position: relative;">
-                ✨ Exclusive advertising opportunities
-              </li>
-              <li style="margin-bottom: 10px; padding-left: 20px; position: relative;">
-                🎯 Industry insights and trends
-              </li>
-              <li style="margin-bottom: 10px; padding-left: 20px; position: relative;">
-                💡 Tips for effective outdoor advertising
-              </li>
-              <li style="padding-left: 20px; position: relative;">
-                🎉 Special subscriber-only offers
-              </li>
-            </ul>
-          </div>
+      <tr>
+        <td style="background-color:#0a0718; border:1px solid #98a9b882; border-radius:12px; padding:25px 20px;">
+          <p style="font-size:16px; font-weight:600; color:#FFFFFF; margin-bottom:15px;">Hello ${escapeHtml(displayName)},</p>
+          <p style="font-size:13px; color:#98A9B8; margin-bottom:12px; line-height:1.6;">
+            Thank you for joining the Bookadzone newsletter. We'll share launch updates and useful insights.
+          </p>
+        </td>
+      </tr>
 
-          <div style="background-color: #7F6AF7; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 25px;">
-            <p style="color: #FFFFFF; font-size: 16px; margin: 0;">
-              Stay tuned for our platform launch - you'll be among the first to know!
-            </p>
-          </div>
+      <tr>
+        <td align="center" style="padding:30px 20px;">
+          <a href="https://bookadzone.com" style="display:inline-block; background-color:#7F6AF7; color:#FFFFFF; text-decoration:none; padding:12px 32px; border-radius:30px; font-size:14px; font-weight:600;">
+            Learn More About Bookadzone
+          </a>
+        </td>
+      </tr>
 
-          <div style="border-top: 1px solid #333333; padding-top: 20px; margin-top: 20px; text-align: center;">
-            <p style="color: #98A9B8; font-size: 14px; margin-bottom: 5px;">
-              Follow us on social media for more updates:
-            </p>
-            <div style="margin-top: 15px;">
-              <a href="#" style="color: #7F6AF7; text-decoration: none; margin: 0 10px;">Twitter</a>
-              <a href="#" style="color: #7F6AF7; text-decoration: none; margin: 0 10px;">LinkedIn</a>
-              <a href="#" style="color: #7F6AF7; text-decoration: none; margin: 0 10px;">Instagram</a>
-            </div>
-          </div>
-
-          <div style="margin-top: 30px; text-align: center; color: #98A9B8; font-size: 12px;">
-            <p>BookAdZone - Revolutionizing Outdoor Advertising</p>
-            <p style="margin-top: 5px;">
-              Questions? Email us at 
-              <a href="mailto:contact@bookadzone.com" style="color: #7F6AF7; text-decoration: none;">
-                contact@bookadzone.com
-              </a>
-            </p>
-          </div>
-        </div>
-      `,
+      <tr>
+        <td align="center" style="border-top:1px solid #98a9b882; padding:30px 20px;">
+          <p style="color:#98A9B8; font-size:11px;">© 2025 Bookadzone. All rights reserved.</p>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>`
     };
 
-    // Send email
     const info = await transporter.sendMail(mailOptions);
     console.log('Subscription confirmation email sent:', info.messageId);
     return true;
@@ -95,7 +95,6 @@ export async function sendSubscriptionEmail(userEmail: string) {
       name: err.name,
       code: (error as Record<string, unknown>)?.code,
     });
-    // Return false instead of throwing to prevent the subscription process from failing
     return false;
   }
 }
