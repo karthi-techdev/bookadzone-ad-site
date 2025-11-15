@@ -382,7 +382,7 @@ export default function Navbar() {
         { name: "Home", id: "home" },
         { name: "Features", id: "features" },
         { name: "How it works?", id: "how-it-works" },
-        { name: "Faq&apos;s", id: "faqs" }
+        { name: "FAQ&apos;s", id: "faqs" }
     ];
 
     return (
@@ -433,7 +433,7 @@ export default function Navbar() {
                       className={getLinkClass(item.id)}
                       onClick={() => handleLinkClick(item.id)}
                     >
-                      {item.name === "Faq&apos;s" ? "Faq's" : item.name}
+                      {item.name === "FAQ&apos;s" ? "FAQ's" : item.name}
                     </Link>
                   </motion.div>
                 ))}
@@ -495,7 +495,7 @@ export default function Navbar() {
                       className={getMobileLinkClass(item.id)}
                       onClick={() => handleLinkClick(item.id)}
                     >
-                      {item.name === "Faq&apos;s" ? "Faq's" : item.name}
+                      {item.name === "FAQ&apos;s" ? "FAQ's" : item.name}
                     </Link>
                   </motion.div>
                 ))}
@@ -511,7 +511,7 @@ export default function Navbar() {
                     onClick={() => {
                       setOpen(true);
                       setIsMobileMenuOpen(false);
-                      setFormErrors({}); // Clear any existing form errors
+                      setFormErrors({}); 
                     }}
                   >
                     Get Notified
@@ -534,7 +534,7 @@ export default function Navbar() {
                   className="absolute inset-0 bg-black/60 backdrop-blur-md"
                   onClick={() => {
                     setOpen(false);
-                    setFormErrors({}); // Clear form errors when closing via backdrop
+                    setFormErrors({}); 
                   }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -577,7 +577,7 @@ export default function Navbar() {
                     onSubmit={handleSubmit} 
                     noValidate 
                     autoComplete="off"
-                    onFocus={() => validateAllFields()} // Validate all fields when form gets focus
+                    onFocus={() => validateAllFields()} 
                     >
                     {[
                       { label: "Full Name", type: "text", placeholder: "Enter your full name", name: "fullName" },
@@ -602,7 +602,6 @@ export default function Navbar() {
                               className={`w-full px-3 py-[0.688rem] text-xs rounded-lg bg-[var(--dark-color)] border ${formErrors[field.name] ? 'border-red-500' : 'border-[var(--light-blur-grey-color)]'} text-white focus:outline-none focus:ring-2 focus:ring-[var(--purple-color)] focus:border-transparent transition-all duration-200 ${formData[field.name as keyof typeof formData] === 'Select Advertiser or Agency' ? 'text-[var(--light-grey-color)]' : ''}`}
                               onChange={(e) => {
                                 handleChange(e);
-                                // Immediately mark as touched on change for select and validate
                                 setTouched(prev => ({ ...prev, [field.name]: true }));
                                 if (e.target.value === 'Select Advertiser or Agency') {
                                   setFormErrors(prev => ({
