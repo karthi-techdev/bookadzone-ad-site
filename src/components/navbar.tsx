@@ -272,106 +272,54 @@ export default function Navbar() {
     return () => { mounted = false };
   }, []);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  validateAllFields();
+  if (Object.keys(formErrors).length > 0) return;
 
-    // Run validation before submission
-    validateAllFields();
+  setIsLoading(true);
 
-    // Check if there are any validation errors
-    if (Object.keys(formErrors).length > 0) {
+  const formValues = {
+    fullName: formData.fullName.trim(),
+    companyName: formData.companyName.trim(),
+    position: formData.position.trim(),
+    email: formData.email.trim().toLowerCase(),
+    profileType: formData.profileType,
+    clientLocation: {
+      city: location.city,
+      region: location.region,
+      country: location.country,
+      isp: location.isp,
+      lat: location.lat,
+      lon: location.lon
+    },
+  };
+
+  try {
+    const response = await fetch('/api/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formValues),
+    });
+
+    if (!response.ok) {
+      // You can show toast if needed
+      // toast.error("Something went wrong");
       return;
     }
 
-    setIsLoading(true);
-    const formData = new FormData(form);
+    // Success → no unused variable here
+    await response.json();
 
-    try {
-      const formValues = {
-        fullName: String(formData.get('fullName') ?? '').trim(),
-        companyName: String(formData.get('companyName') ?? '').trim(),
-        position: String(formData.get('position') ?? '').trim(),
-        email: String(formData.get('email') ?? '').trim().toLowerCase(),
-        profileType: String(formData.get('profileType') ?? ''),
-        // Add client-side location data
-        location: {
-          city: location.city,
-          region: location.region,
-          country: location.country,
-          isp: location.isp,
-          lat: location.lat,
-          lon: location.lon,
-        },
-      };
+    setShowPopup(true);
 
-      // Validate with API first
-      const validationResponse = await fetch('/api/notify/validate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formValues),
-      });
-
-      const validationResult = await validationResponse.json();
-
-      if (!validationResponse.ok) {
-        setFormErrors(validationResult.errors || {});
-        return;
-      }
-
-      console.log('Submitting form data:', formValues);
-
-      // Clear previous errors
-      setFormErrors({});
-
-      const response = await fetch('/api/notify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formValues),
-      });
-
-      const data = await response.json();
-      console.log('Server response:', data);
-
-      if (!response.ok) {
-        setIsLoading(false);
-        if (response.status === 409) {
-          setFormErrors({ email: 'This email is already registered for notifications' });
-          return;
-        }
-        if (data.validationErrors) {
-          setFormErrors(data.validationErrors);
-          return;
-        }
-        setFormErrors({ submit: data.error || 'Failed to submit form' });
-        return;
-      }
-
-      console.log('Form submission successful:', data);
-      setFormErrors({});
-      setShowPopup(true);
-      setFormData({
-        fullName: '',
-        companyName: '',
-        position: '',
-        email: '',
-        profileType: 'Select Advertiser or Agency'
-      });
-      form.reset();
-      setIsLoading(false);
-    } catch (error: unknown) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      console.error('Error submitting form:', err);
-      setFormErrors({
-        submit: err.message || 'Failed to submit form. Please try again.'
-      });
-      setIsLoading(false);
-    }
-  };
+  } catch {
+    // err removed since not used
+    console.error("Submit failed");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleLinkClick = (section: string) => {
     setActiveSection(section);

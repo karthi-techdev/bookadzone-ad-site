@@ -2,15 +2,18 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { connectToDatabase } from '@/lib/db';
 import { NotificationSignup } from '@/models/NotificationSignup';
+import axios from 'axios';
 
-// Email template for welcome message (dark themed design)
-const escapeHtml = (s: string) => String(s)
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/\"/g, '&quot;')
-  .replace(/'/g, '&#039;');
+// ---------- Utility: Escape HTML ----------
+const escapeHtml = (s: string) =>
+  String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 
+// ---------- Email Template ----------
 const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,14 +27,12 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; background-color:#080411; border-radius:16px;">
       <tr>
         <td align="center" style="padding:20px 30px;">
-          <!-- Logo -->
           <img src="https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png" alt="BookAdZone Logo" width="180" style="display:block; margin-bottom:20px;" />
           <h1 style="font-size:26px; font-weight:700; color:#7F6AF7; margin:0;">We're Launching Soon!</h1>
           <p style="font-size:14px; color:#98A9B8; margin:10px 0 25px;">Be the first to know when we go live</p>
         </td>
       </tr>
 
-      <!-- Highlight Box -->
       <tr>
         <td style="background-color:#0a0718; border:1px solid #98a9b882; border-radius:12px; padding:25px 20px;">
           <p style="font-size:16px; font-weight:600; color:#FFFFFF; margin-bottom:15px;">Hello ${escapeHtml(name || '')},</p>
@@ -44,7 +45,6 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
         </td>
       </tr>
 
-      <!-- CTA Button -->
       <tr>
         <td align="center" style="padding:30px 20px;">
           <a href="https://bookadzone.com" style="display:inline-block; background-color:#7F6AF7; color:#FFFFFF; text-decoration:none; padding:12px 32px; border-radius:30px; font-size:14px; font-weight:600;">
@@ -53,7 +53,6 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
         </td>
       </tr>
 
-      <!-- Stats -->
       <tr>
         <td align="center" style="background-color:#ffffff1f; padding:15px 10px;">
           <p style="font-size:12px; color:#98A9B8; margin:0;">
@@ -63,7 +62,6 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
         </td>
       </tr>
 
-      <!-- Footer -->
       <tr>
         <td align="center" style="border-top:1px solid #98a9b882; padding:30px 20px;">
           <p style="color:#98A9B8; font-size:11px;">© ${new Date().getFullYear()} Bookadzone. All rights reserved.</p>
@@ -74,7 +72,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
 </body>
 </html>`;
 
-// Create email transporter
+// ---------- Email Transporter ----------
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT) || 587,
@@ -85,28 +83,73 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// ---------- Get Client IP (Vercel/Cloudflare) ----------
+const getClientIp = (request: Request): string => {
+  const headers = request.headers;
+  return (
+    headers.get('cf-connecting-ip') ||
+    headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+    headers.get('x-real-ip') ||
+    'unknown'
+  );
+};
+
+// ---------- Get Location from IP (Server-Side) ----------
+interface ILocation {
+  city: string;
+  region: string;
+  country: string;
+  isp?: string;
+  lat?: number;
+  lon?: number;
+}
+
+const getLocationFromIp = async (ip: string): Promise<ILocation> => {
+  if (!ip || ip === 'unknown' || ip.startsWith('127.') || ip === '::1') {
+    return { city: 'Localhost', country: 'Local', region: 'Local' };
+  }
+
+  try {
+    const { data } = await axios.get(`http://ip-api.com/json/${ip}?fields=status,city,regionName,country,isp,lat,lon`);
+    if (data.status === 'success') {
+      return {
+        city: data.city || 'Unknown',
+        region: data.regionName || 'Unknown',
+        country: data.country || 'Unknown',
+        isp: data.isp || 'Unknown',
+        lat: data.lat,
+        lon: data.lon,
+      };
+    }
+  } catch (err: unknown) {
+  const error = err instanceof Error ? err : new Error(String(err));
+  console.warn("GeoIP lookup failed:", error.message);
+}
+
+
+  return { city: 'Unknown', country: 'Unknown', region: 'Unknown' };
+};
+
+// ========== POST: Handle Signup ==========
 export async function POST(request: Request) {
   try {
     const data = await request.json();
     console.log('Received form data:', data);
-    
-    const { fullName, profileType, companyName, position, email } = data;
 
-    // Basic validation
+    const { fullName, profileType, companyName, position, email, clientLocation } = data;
+
+    // --- Validation ---
     if (!fullName || !profileType || !companyName || !position || !email) {
-      console.error('Missing required fields:', { fullName, profileType, companyName, position, email });
       return NextResponse.json(
         { error: 'All fields are required' },
         { status: 400 }
       );
     }
 
-    // Connect to MongoDB
-    console.log('Attempting to connect to MongoDB...');
+    // --- Connect to DB ---
     await connectToDatabase();
-    console.log('Successfully connected to MongoDB');
 
-    // Check if email already exists
+    // --- Check duplicate ---
     const existingSignup = await NotificationSignup.findOne({ email: email.toLowerCase() });
     if (existingSignup) {
       return NextResponse.json(
@@ -115,86 +158,99 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save to database
-    console.log('Attempting to save notification signup...');
+    // --- Get IP & Location ---
+    const ipAddress = getClientIp(request);
+    const serverLocation = await getLocationFromIp(ipAddress);
+
+    // Prefer client location if valid
+    const finalLocation: ILocation =
+      clientLocation?.city && clientLocation.city !== 'Unknown'
+        ? clientLocation
+        : serverLocation;
+
+    // --- Save to DB ---
     const notificationSignup = new NotificationSignup({
-      fullName,
+      fullName: fullName.trim(),
       profileType,
-      companyName,
-      position,
-      email: email.toLowerCase()
+      companyName: companyName.trim(),
+      position: position.trim(),
+      email: email.toLowerCase().trim(),
+      ipAddress,
+      location: finalLocation,
+      status: 'active',
+      isDeleted: false,
     });
 
     const savedSignup = await notificationSignup.save();
-    console.log('Successfully saved to database:', savedSignup);
+    console.log('Saved with location:', savedSignup);
 
-    // Send welcome email
-    console.log('Sending welcome email...');
+    // --- Send Email ---
     await transporter.sendMail({
       from: process.env.SMTP_FROM || 'noreply@bookadzone.com',
       to: email,
       subject: 'Welcome to BookAdZone!',
       html: getWelcomeEmailTemplate(fullName),
     });
-    console.log('Welcome email sent successfully');
 
     return NextResponse.json(
-      { 
+      {
         message: 'Successfully registered for notifications',
-        data: savedSignup
+        data: savedSignup,
       },
       { status: 200 }
     );
-    } catch (error: unknown) {
-        // Normalize unknown error to an Error instance
-        const err = error instanceof Error ? error : new Error(String(error));
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error('Signup error:', {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+    });
 
-            console.error('Detailed error in notification signup:', {
-                message: err.message,
-                stack: err.stack,
-                name: err.name
-            });
-
-        // Return more specific error messages
-        if (err.name === 'ValidationError') {
-            return NextResponse.json(
-                { error: 'Validation failed', details: err.message },
-                { status: 400 }
-            );
-        } else if (err.name === 'MongoError' || err.name === 'MongoServerError') {
-            return NextResponse.json(
-                { error: 'Database error', details: err.message },
-                { status: 500 }
-            );
-        }
-
-        return NextResponse.json(
-            { error: 'Failed to process signup', details: err.message },
-            { status: 500 }
-        );
+    if (err.name === 'ValidationError') {
+      return NextResponse.json(
+        { error: 'Validation failed', details: err.message },
+        { status: 400 }
+      );
     }
+
+    if (err.name === 'MongoError' || err.name === 'MongoServerError') {
+      return NextResponse.json(
+        { error: 'Database error', details: err.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to process signup', details: err.message },
+      { status: 500 }
+    );
+  }
 }
 
+// ========== GET: Return Counts ==========
 export async function GET() {
-    try {
-        await connectToDatabase();
+  try {
+    await connectToDatabase();
 
-        // Defaults requested by the UI
-        const defaultAdvertisers = 356;
-        const defaultAgencies = 127;
+    const defaultAdvertisers = 356;
+    const defaultAgencies = 127;
 
-        // Aggregate counts from NotificationSignup collection
-        const advertisersCount = await NotificationSignup.countDocuments({ profileType: 'Advertiser' });
-        const agenciesCount = await NotificationSignup.countDocuments({ profileType: 'Agency' });
+    const advertisersCount = await NotificationSignup.countDocuments({ profileType: 'Advertiser' });
+    const agenciesCount = await NotificationSignup.countDocuments({ profileType: 'Agency' });
 
-        return NextResponse.json({
-            advertisers: defaultAdvertisers + (advertisersCount || 0),
-            agencies: defaultAgencies + (agenciesCount || 0),
-        }, { status: 200 });
-    } catch (error: unknown) {
-        const err = error instanceof Error ? error : new Error(String(error));
-        console.error('Failed to get notify counts:', err.message);
-        // Return defaults if DB unavailable
-        return NextResponse.json({ advertisers: 356, agencies: 127 }, { status: 200 });
-    }
+    return NextResponse.json(
+      {
+        advertisers: defaultAdvertisers + (advertisersCount || 0),
+        agencies: defaultAgencies + (agenciesCount || 0),
+      },
+      { status: 200 }
+    );
+  } catch (error: unknown) {
+    console.error('Failed to get counts:', error);
+    return NextResponse.json(
+      { advertisers: 356, agencies: 127 },
+      { status: 200 }
+    );
+  }
 }
