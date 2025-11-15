@@ -2,74 +2,18 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { connectToDatabase } from '@/lib/db';
 import { NotificationSignup } from '@/models/NotificationSignup';
-import axios from 'axios';
 
-const getClientIp = (request: Request): string => {
-  const headers = request.headers;
-
-  const forwarded = headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
-
-  const realIp = headers.get('x-real-ip');
-  if (realIp) return realIp.trim();
-
-  const cfConnectingIp = headers.get('cf-connecting-ip');
-  if (cfConnectingIp) return cfConnectingIp.trim();
-
-  return 'unknown';
-};
-
-interface IpApiResponse {
-  status: string;
-  city?: string;
-  regionName?: string;
-  country?: string;
-  isp?: string;
-  lat?: number;
-  lon?: number;
-  query?: string;
-  message?: string;
-}
-
-interface ILocation {
+// Type for location data from client
+interface LocationData {
   city: string;
   region: string;
   country: string;
-  isp?: string;
+  isp: string;
   lat?: number;
   lon?: number;
 }
 
-const getLocationFromIp = async (ip: string): Promise<ILocation | null> => {
-  if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('::ffff:127.')) {
-    return { city: 'Localhost', country: 'Local', region: 'Local' };
-  }
-
-  try {
-    const { data } = await axios.get<IpApiResponse>(`http://ip-api.com/json/${ip}`);
-    if (data.status === 'success') {
-      return {
-        city: data.city || 'Unknown',
-        region: data.regionName || 'Unknown',
-        country: data.country || 'Unknown',
-        isp: data.isp || 'Unknown',
-        lat: data.lat,
-        lon: data.lon,
-      };
-    } else {
-      console.warn('GeoIP failed:', data.message);
-    }
-  }  catch (error) {
-  const err = error instanceof Error ? error : new Error(String(error));
-  console.error('GeoIP request failed:', err.message);
-}
-
-
-  return { city: 'Unknown', country: 'Unknown', region: 'Unknown' };
-};
-
+// Email template for welcome message
 const getWelcomeEmailTemplate = (name: string) => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -188,6 +132,7 @@ const getWelcomeEmailTemplate = (name: string) => `
 </html>
 `;
 
+// Create email transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT) || 587,
@@ -203,20 +148,23 @@ export async function POST(request: Request) {
     const data = await request.json();
     console.log('Received form data:', data);
 
-    const { fullName, profileType, companyName, position, email } = data;
+    const { fullName, profileType, companyName, position, email, location } = data;
 
+    // Basic validation
     if (!fullName || !profileType || !companyName || !position || !email) {
+      console.error('Missing required fields:', { fullName, profileType, companyName, position, email });
       return NextResponse.json(
         { error: 'All fields are required' },
         { status: 400 }
       );
     }
 
-    const ipAddress = getClientIp(request);
-    const locationData = await getLocationFromIp(ipAddress);
-
+    // Connect to MongoDB
+    console.log('Attempting to connect to MongoDB...');
     await connectToDatabase();
+    console.log('Successfully connected to MongoDB');
 
+    // Check if email already exists
     const existingSignup = await NotificationSignup.findOne({ email: email.toLowerCase() });
     if (existingSignup) {
       return NextResponse.json(
@@ -225,43 +173,64 @@ export async function POST(request: Request) {
       );
     }
 
+    // Prepare location data from client
+    const clientLocation: LocationData = location || {
+      city: 'Unknown',
+      region: 'Unknown',
+      country: 'Unknown',
+      isp: 'Unknown',
+    };
+
+    // Save to database with client location data
+    console.log('Attempting to save notification signup...');
     const notificationSignup = new NotificationSignup({
       fullName,
       profileType,
       companyName,
       position,
       email: email.toLowerCase(),
-      ipAddress,
-      location: locationData,
-      status: 'active',
-      isDeleted: false,
+      location: {
+        city: clientLocation.city,
+        region: clientLocation.region,
+        country: clientLocation.country,
+        isp: clientLocation.isp,
+        lat: clientLocation.lat,
+        lon: clientLocation.lon,
+      },
+      ipAddress: 'Client-based', // Indicate this is from client
     });
 
     const savedSignup = await notificationSignup.save();
-    console.log('Successfully saved signup with IP & location:', savedSignup);
+    console.log('Successfully saved to database:', savedSignup);
 
+    // Send welcome email
+    console.log('Sending welcome email...');
     await transporter.sendMail({
       from: process.env.SMTP_FROM || 'noreply@bookadzone.com',
       to: email,
       subject: 'Welcome to BookAdZone!',
       html: getWelcomeEmailTemplate(fullName),
     });
+    console.log('Welcome email sent successfully');
 
     return NextResponse.json(
       {
         message: 'Successfully registered for notifications',
-        data: savedSignup,
+        data: savedSignup
       },
       { status: 200 }
     );
   } catch (error: unknown) {
+    // Normalize unknown error to an Error instance
     const err = error instanceof Error ? error : new Error(String(error));
+
     console.error('Detailed error in notification signup:', {
       message: err.message,
       stack: err.stack,
-      name: err.name,
+      name: err.name
     });
 
+    // Return more specific error messages
     if (err.name === 'ValidationError') {
       return NextResponse.json(
         { error: 'Validation failed', details: err.message },
@@ -281,14 +250,15 @@ export async function POST(request: Request) {
   }
 }
 
-// ========== GET: Return Counts (unchanged) ==========
 export async function GET() {
   try {
     await connectToDatabase();
 
+    // Defaults requested by the UI
     const defaultAdvertisers = 356;
     const defaultAgencies = 127;
 
+    // Aggregate counts from NotificationSignup collection
     const advertisersCount = await NotificationSignup.countDocuments({ profileType: 'Advertiser' });
     const agenciesCount = await NotificationSignup.countDocuments({ profileType: 'Agency' });
 
@@ -296,8 +266,10 @@ export async function GET() {
       advertisers: defaultAdvertisers + (advertisersCount || 0),
       agencies: defaultAgencies + (agenciesCount || 0),
     }, { status: 200 });
-  }  catch (error) {
-  const err = error instanceof Error ? error : new Error(String(error));
-  console.error('GeoIP request failed:', err.message);
-}
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error('Failed to get notify counts:', err.message);
+    // Return defaults if DB unavailable
+    return NextResponse.json({ advertisers: 356, agencies: 127 }, { status: 200 });
+  }
 }

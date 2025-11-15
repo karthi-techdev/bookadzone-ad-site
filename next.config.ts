@@ -49,8 +49,6 @@ const nextConfig: NextConfig = {
     ]
   },
   images: {
-    // Use remotePatterns instead of deprecated `domains`.
-    // Allow images served from bookadzone.com over HTTPS.
     remotePatterns: [
       {
         protocol: 'https',
@@ -69,6 +67,7 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
+    unoptimized: process.env.NODE_ENV === 'development', // Skip image optimization in dev for faster builds
   },
   compress: true,
   poweredByHeader: false,
@@ -79,7 +78,21 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
     scrollRestoration: true,
-  }
+  },
+  // Disable static generation for pages that don't need it
+  staticPageGenerationTimeout: 120,
+  // Optimize module resolution
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Client-side optimizations
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -1,0 +1,5 @@
+# Optimize for modern browsers to reduce unnecessary transpilation
+# Use a conservative set of targets compatible with Browserslist
+last 2 versions
+not dead
+> 0.2%

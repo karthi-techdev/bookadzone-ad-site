@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:profile": "NODE_OPTIONS=--max_old_space_size=4096 next build",
+    "dev:turbo": "NODE_OPTIONS=--max_old_space_size=4096 next dev --turbopack"
   },
   "dependencies": {
     "@fontsource-variable/urbanist": "^5.2.7",
@@ -33,7 +35,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/mongoose": "^5.11.96",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.3",
     "@types/react": "^19",

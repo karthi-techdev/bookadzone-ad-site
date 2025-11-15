@@ -1,0 +1,15 @@
+# Ignore unnecessary files during build to speed up process
+.git
+.github
+.gitignore
+.eslintrc*
+jest.config.*
+*.md
+.env.*.local
+node_modules
+.next
+coverage
+.DS_Store
+*.log
+.vercel
+public/media/.gitkeep
