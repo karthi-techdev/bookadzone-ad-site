@@ -1,6 +1,32 @@
 import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 
+// Sub-schema for location
+const LocationSchema = new Schema({
+  city: {
+    type: String,
+    default: 'Unknown',
+  },
+  region: {
+    type: String,
+    default: 'Unknown',
+  },
+  country: {
+    type: String,
+    default: 'Unknown',
+  },
+  isp: {
+    type: String,
+    default: 'Unknown',
+  },
+  lat: {
+    type: Number,
+  },
+  lon: {
+    type: Number,
+  },
+}, { _id: false });
+
 const NotificationSignupSchema = new Schema({
   fullName: { 
     type: String, 
@@ -40,11 +66,42 @@ const NotificationSignupSchema = new Schema({
   signupDate: { 
     type: Date, 
     default: Date.now 
-  }
+  },
+
+  // --- NEW FIELDS (from Express logic) ---
+  ipAddress: {
+    type: String,
+    trim: true,
+  },
+  location: {
+    type: LocationSchema,
+    default: () => ({
+      city: 'Unknown',
+      region: 'Unknown',
+      country: 'Unknown',
+      isp: 'Unknown',
+    }),
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active',
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   timestamps: true,
   collection: 'notificationSignups'
 });
+
+// Indexes for efficient filtering
+NotificationSignupSchema.index({ status: 1 });
+NotificationSignupSchema.index({ isDeleted: 1 });
+NotificationSignupSchema.index({ 'location.country': 1 });
+NotificationSignupSchema.index({ 'location.city': 1 });
+NotificationSignupSchema.index({ ipAddress: 1 });
 
 export const NotificationSignup = mongoose.models.NotificationSignup || 
   mongoose.model('NotificationSignup', NotificationSignupSchema);
