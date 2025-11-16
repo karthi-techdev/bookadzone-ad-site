@@ -33,7 +33,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
             Thank you for joining the Bookadzone waitlist! We're thrilled to have you on board as we prepare to revolutionize outdoor advertising.
           </p>
           <p style="font-size:13px; color:#98A9B8; margin-bottom:20px; line-height:1.6;">
-            You've taken the first step toward simplifying your ad space booking process, and we can't wait to show you how BookAdZone will transform the way you manage billboards, digital screens, and hoardings.
+            You've taken the first step toward simplifying your ad space booking process, and we can't wait to show you how Bookadzone will transform the way you manage billboards, digital screens, and hoardings.
           </p>
 
           <!-- Features -->
