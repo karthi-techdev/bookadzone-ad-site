@@ -319,16 +319,17 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       });
 
       const result = await response.json();
-      console.log('[API RESPONSE]', { status: response.status, data: result }); // DEBUG
+      console.log('[API RESPONSE]', { status: response.status, data: result }); 
 
       if (!response.ok) {
         setFormErrors({ submit: result.error || 'Submission failed' });
         return;
       }
 
+      // Show success popup first, then close the modal
       setShowPopup(true);
-      setOpen(false);
-
+      
+      // Reset form data
       setFormData({
         fullName: '',
         companyName: '',
@@ -344,6 +345,7 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       setIsLoading(false);
     }
   };
+
   const handleLinkClick = (section: string) => {
     setActiveSection(section);
     setIsMobileMenuOpen(false);
@@ -669,39 +671,6 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
                   </motion.button>
                 </form>
 
-                {/* Success Popup */}
-                <AnimatePresence>
-                  {showPopup && (
-                    <motion.div
-                      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <motion.div
-                        className="bg-[var(--dark-color)] border border-[var(--light-blur-grey-color)] rounded-2xl p-6 text-center max-w-sm w-full shadow-2xl"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      >
-                        <h2 className="text-lg font-semibold text-white mb-2">
-                          🎉 You&apos;re on the List!
-                        </h2>
-                        <p className="text-sm text-[var(--light-grey-color)] mb-4">
-                          Thank you for your interest. We&apos;ll notify you as soon as we launch!
-                        </p>
-                        <button
-                          onClick={() => setShowPopup(false)}
-                          className="px-5 py-2 text-xs rounded-lg bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-medium transition-all duration-200"
-                        >
-                          Close
-                        </button>
-                      </motion.div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
                 <motion.button
                   onClick={() => {
                     setOpen(false);
@@ -730,6 +699,47 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
                 >
                   <p>Already <span className="text-[var(--purple-color)] font-semibold">{advertisersCount} Advertisers</span> and <span className="text-[var(--purple-color)] font-semibold">{agenciesCount} Agencies</span> have subscribed.</p>
                 </motion.div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Success Popup - MOVED OUTSIDE THE FORM MODAL */}
+        <AnimatePresence>
+          {showPopup && (
+            <motion.div
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50000000001"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                setShowPopup(false);
+                setOpen(false); // Also close the form modal when closing success popup
+              }}
+            >
+              <motion.div
+                className="bg-[var(--dark-color)] border border-[var(--light-blur-grey-color)] rounded-2xl p-6 text-center max-w-sm w-full shadow-2xl mx-4"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside popup
+              >
+                <h2 className="text-lg font-semibold text-white mb-2">
+                  🎉 You&apos;re on the List!
+                </h2>
+                <p className="text-sm text-[var(--light-grey-color)] mb-4">
+                  Thank you for your interest. We&apos;ll notify you as soon as we launch!
+                </p>
+                <button
+                  onClick={() => {
+                    setShowPopup(false);
+                    setOpen(false); // Close both popups
+                  }}
+                  className="px-5 py-2 text-xs rounded-lg bg-[var(--purple-color)] hover:bg-[var(--light-purple-color)] text-white font-medium transition-all duration-200"
+                >
+                  Close
+                </button>
               </motion.div>
             </motion.div>
           )}
