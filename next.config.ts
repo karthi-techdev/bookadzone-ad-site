@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://api.bookadzone.com",
+             "connect-src 'self' https://api.allorigins.win https://ipapi.co https://ipwho.is https://ip-api.com https://get.geojs.io https://api.bookadzone.com",
               "frame-ancestors 'none'",
               "object-src 'none'",
               "base-uri 'self'"
