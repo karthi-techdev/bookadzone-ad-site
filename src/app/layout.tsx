@@ -5,10 +5,10 @@ import ClientLayout from "../components/ClientLayout";
 
 export const metadata: Metadata = {
   title: {
-    default: "BookAdZone | Your Outdoor Advertising AI Powerhouse",
-    template: "%s | BookAdZone AI"
+    default: "Bookadzone | Your Outdoor Advertising AI Powerhouse",
+    template: "%s | Bookadzone AI"
   },
-  description: "Modernize your outdoor advertising with BookAdZone. Get predictive AI insights and instantly book billboards, hoardings, & digital screens. Streamline your campaigns with our AI powerhouse platform. Join the waitlist for early access!",
+  description: "Modernize your outdoor advertising with Bookadzone. Get predictive AI insights and instantly book billboards, hoardings, & digital screens. Streamline your campaigns with our AI powerhouse platform. Join the waitlist for early access!",
   keywords: [
     "outdoor advertising",
     "billboard booking",
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
     "AI media buying",
     "AI insights" 
   ],
-  authors: [{ name: "BookAdZone" }],
-  creator: "BookAdZone",
-  publisher: "BookAdZone",
+  authors: [{ name: "Bookadzone" }],
+  creator: "Bookadzone",
+  publisher: "Bookadzone",
   formatDetection: {
     email: false,
     address: false,
@@ -50,21 +50,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://bookadzone.com',
-    siteName: 'BookAdZone',
-    title: 'BookAdZone: The AI Powerhouse for Outdoor Advertising', 
-    description: 'Modernize your OOH campaigns. Get predictive AI insights and book ad spaces instantly with the BookAdZone powerhouse.', 
+    siteName: 'Bookadzone',
+    title: 'Bookadzone: The AI Powerhouse for Outdoor Advertising', 
+    description: 'Modernize your OOH campaigns. Get predictive AI insights and book ad spaces instantly with the Bookadzone powerhouse.', 
     images: [
       {
         url: '/favicon.ico', 
         width: 1200,
         height: 630,
-        alt: 'BookAdZone - AI-Powered Outdoor Advertising',
+        alt: 'Bookadzone - AI-Powered Outdoor Advertising',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BookAdZone: Your Outdoor Advertising AI Powerhouse', 
+    title: 'Bookadzone: Your Outdoor Advertising AI Powerhouse', 
     description: 'Modernize outdoor advertising with predictive AI insights. Book billboards & digital screens instantly with our powerhouse platform.', 
     images: ['/twitter-image.jpg'], 
     creator: '@bookadzone',
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
   },
   category: 'advertising technology',
   classification: 'Advertising Platform',
-  abstract: 'BookAdZone is an AI powerhouse platform, offering predictive insights to modernize and simplify outdoor ad space booking for advertisers and agencies all over india.',
+  abstract: 'Bookadzone is an AI powerhouse platform, offering predictive insights to modernize and simplify outdoor ad space booking for advertisers and agencies all over india.',
   referrer: 'origin-when-cross-origin',
   // Viewport config moved to viewport.ts
   icons: {
@@ -103,14 +103,14 @@ export const metadata: Metadata = {
     shortcut: ['/favicon.ico'],
   },
   appleWebApp: {
-    title: 'BookAdZone AI Powerhouse', 
+    title: 'Bookadzone AI Powerhouse', 
     statusBarStyle: 'black-translucent',
     capable: true,
   },
   other: {
     'msapplication-TileColor': '#000000',
     'msapplication-config': '/browserconfig.xml',
-    'application-name': 'BookAdZone AI Powerhouse', 
+    'application-name': 'Bookadzone AI Powerhouse', 
     'generator': 'Next.js',
     'revisit-after': '7 days',
     'rating': 'general',
@@ -138,11 +138,11 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "BookAdZone",
+              "name": "Bookadzone",
               "alternateName": "AI Outdoor Advertising Powerhouse", 
               "url": "https://bookadzone.com",
               "logo": "https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png",
-              "description": "Modernize outdoor advertising with predictive AI insights. The BookAdZone powerhouse platform simplifies instant booking for billboards, hoardings, and digital screens.",
+              "description": "Modernize outdoor advertising with predictive AI insights. The Bookadzone powerhouse platform simplifies instant booking for billboards, hoardings, and digital screens.",
               "sameAs": [
                 "https://x.com/bookadzone",
                 "https://linkedin.com/company/bookadzone",
@@ -173,7 +173,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "BookAdZone",
+              "name": "Bookadzone",
               "url": "https://bookadzone.com",
               "potentialAction": {
                 "@type": "SearchAction",

@@ -33,15 +33,15 @@ export async function sendSubscriptionEmail(userEmail: string) {
 
     // Reuse the same design used elsewhere (dark themed)
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"BookAdZone" <noreply@bookadzone.com>',
+      from: process.env.SMTP_FROM || '"Bookadzone" <noreply@bookadzone.com>',
       to: userEmail,
-      subject: 'Thanks for subscribing to BookAdZone',
+      subject: 'Thanks for subscribing to Bookadzone',
       html: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to BookAdZone</title>
+  <title>Welcome to Bookadzone</title>
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body style="margin:0; padding:0; background-color:#080411; color:#FFFFFF; font-family:'Urbanist', Arial, sans-serif;">
@@ -50,7 +50,7 @@ export async function sendSubscriptionEmail(userEmail: string) {
       <tr>
         <td align="center" style="padding:20px 30px;">
           <!-- Logo -->
-          <img src="https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png" alt="BookAdZone Logo" width="180" style="display:block; margin-bottom:20px;" />
+          <img src="https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png" alt="Bookadzone Logo" width="180" style="display:block; margin-bottom:20px;" />
           <h1 style="font-size:26px; font-weight:700; color:#7F6AF7; margin:0;">We're Launching Soon!</h1>
           <p style="font-size:14px; color:#98A9B8; margin:10px 0 25px;">Be the first to know when we go live</p>
         </td>

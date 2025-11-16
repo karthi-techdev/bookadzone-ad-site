@@ -10,7 +10,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to BookAdZone</title>
+  <title>Welcome to Bookadzone</title>
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body style="margin:0; padding:0; background-color:#080411; color:#FFFFFF; font-family:'Urbanist', Arial, sans-serif;">
@@ -18,7 +18,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; background-color:#080411; border-radius:16px;">
       <tr>
         <td align="center" style="padding:20px 30px;">
-          <img src="https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png" alt="BookAdZone Logo" width="180" style="display:block; margin-bottom:20px;" />
+          <img src="https://www.bookadzone.com/_next/static/media/bookadzone-logo.3e77d101.png" alt="Bookadzone Logo" width="180" style="display:block; margin-bottom:20px;" />
           <h1 style="font-size:26px; font-weight:700; color:#7F6AF7; margin:0;">We're Launching Soon!</h1>
           <p style="font-size:14px; color:#98A9B8; margin:10px 0 25px;">Be the first to know when we go live</p>
         </td>
@@ -28,7 +28,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
         <td style="background-color:#0a0718; border:1px solid #98a9b882; border-radius:12px; padding:25px 20px;">
           <p style="font-size:16px; font-weight:600; color:#FFFFFF; margin-bottom:15px;">Hello ${name},</p>
           <p style="font-size:13px; color:#98A9B8; margin-bottom:12px; line-height:1.6;">
-            Thank you for joining the BookAdZone waitlist!
+            Thank you for joining the Bookadzone waitlist!
           </p>
         </td>
       </tr>
@@ -52,7 +52,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
 
       <tr>
         <td align="center" style="border-top:1px solid #98a9b882; padding:30px 20px;">
-          <p style="color:#98A9B8; font-size:11px;">© ${new Date().getFullYear()} BookAdZone. All rights reserved.</p>
+          <p style="color:#98A9B8; font-size:11px;">© ${new Date().getFullYear()} Bookadzone. All rights reserved.</p>
         </td>
       </tr>
     </table>
@@ -109,9 +109,9 @@ export async function POST(request: Request) {
     if (process.env.SMTP_USER && process.env.SMTP_PASSWORD) {
       try {
         await transporter.sendMail({
-          from: `"BookAdZone" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+          from: `"Bookadzone" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
           to: email,
-          subject: 'Welcome to BookAdZone!',
+          subject: 'Welcome to Bookadzone!',
           html: getWelcomeEmailTemplate(fullName),
         });
         console.log(`Welcome email sent to: ${email}`);
