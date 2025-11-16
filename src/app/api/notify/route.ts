@@ -13,7 +13,7 @@ const getWelcomeEmailTemplate = (name: string) => `<!DOCTYPE html>
   <title>Welcome to BookAdZone</title>
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
-<body style="margin:0; padding:0; background-color:#080411; color:#FFFFFF; font-family:'Urbanist', Arial, sans-serif;">
+<body style="margin:0; padding:0; background-color:#080411; color:#FFFFFF; font-family:'Urbanist', Arial, sans-serif !important;">
   <center style="width:100%; background-color:#080411; padding:30px 0;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:600px; background-color:#080411; border-radius:16px;">
       <tr>
