@@ -255,72 +255,95 @@ export default function Navbar() {
 
   // Fetch aggregated counts (defaults + DB) for display
   useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const res = await fetch('/api/notify');
-        if (!res.ok) return;
-        const json = await res.json();
-        if (!mounted) return;
-        if (typeof json.advertisers === 'number') setAdvertisersCount(json.advertisers);
-        if (typeof json.agencies === 'number') setAgenciesCount(json.agencies);
-      } catch (e) {
-        // ignore and keep defaults
-        console.warn('Could not fetch notify counts', e);
-      }
-    })();
-    return () => { mounted = false };
-  }, []);
+  let mounted = true;
+  (async () => {
+    try {
+      const res = await fetch('/api/notify');
+      if (!res.ok) throw new Error('Failed to fetch counts');
+      const json = await res.json();
+      if (!mounted) return;
+      setAdvertisersCount(json.advertisers ?? 356);
+      setAgenciesCount(json.agencies ?? 127);
+    } catch (e) {
+      console.warn('Could not fetch notify counts', e);
+      // Keep defaults
+    }
+  })();
+  return () => { mounted = false };
+}, []);
 
 const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  validateAllFields();
-  if (Object.keys(formErrors).length > 0) return;
+    e.preventDefault();
+    setFormErrors({});
+    setTouched({});
 
-  setIsLoading(true);
+    validateAllFields();
 
-  const formValues = {
-    fullName: formData.fullName.trim(),
-    companyName: formData.companyName.trim(),
-    position: formData.position.trim(),
-    email: formData.email.trim().toLowerCase(),
-    profileType: formData.profileType,
-    clientLocation: {
-      city: location.city,
-      region: location.region,
-      country: location.country,
-      isp: location.isp,
-      lat: location.lat,
-      lon: location.lon
-    },
-  };
+    // Give React a tick so formErrors is updated
+    await new Promise(r => setTimeout(r, 100));
 
-  try {
-    const response = await fetch('/api/notify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formValues),
-    });
-
-    if (!response.ok) {
-      // You can show toast if needed
-      // toast.error("Something went wrong");
+    if (Object.keys(formErrors).length > 0) {
+      console.log('Validation failed →', formErrors);
       return;
     }
 
-    // Success → no unused variable here
-    await response.json();
+    submitForm();
+  };
 
-    setShowPopup(true);
+  const submitForm = async () => {
+    setIsLoading(true);
 
-  } catch {
-    // err removed since not used
-    console.error("Submit failed");
-  } finally {
-    setIsLoading(false);
-  }
-};
+    const formValues = {
+      fullName: formData.fullName.trim(),
+      companyName: formData.companyName.trim(),
+      position: formData.position.trim(),
+      email: formData.email.trim().toLowerCase(),
+      profileType: formData.profileType,
+      clientLocation: {
+        city: location.city || 'Unknown',
+        region: location.region || 'Unknown',
+        country: location.country || 'Unknown',
+        isp: location.isp || 'Unknown',
+        lat: location.lat,
+        lon: location.lon,
+      },
+    };
 
+    console.log('[FORM VALUES] →', formValues);   
+
+    try {
+      const response = await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formValues),
+      });
+
+      const result = await response.json();
+      console.log('[API RESPONSE]', { status: response.status, data: result }); // DEBUG
+
+      if (!response.ok) {
+        setFormErrors({ submit: result.error || 'Submission failed' });
+        return;
+      }
+
+      setShowPopup(true);
+      setOpen(false);
+
+      setFormData({
+        fullName: '',
+        companyName: '',
+        position: '',
+        email: '',
+        profileType: 'Select Advertiser or Agency'
+      });
+
+    } catch (err) {
+      console.error('[SUBMIT ERROR]', err);   // DEBUG
+      setFormErrors({ submit: 'Network error. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleLinkClick = (section: string) => {
     setActiveSection(section);
     setIsMobileMenuOpen(false);
@@ -537,7 +560,6 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
                   onSubmit={handleSubmit}
                   noValidate
                   autoComplete="off"
-                  onFocus={() => validateAllFields()}
                 >
                   {[
                     { label: "Full Name", type: "text", placeholder: "Enter your full name", name: "fullName" },

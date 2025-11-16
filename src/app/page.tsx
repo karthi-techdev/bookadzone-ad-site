@@ -418,17 +418,6 @@ export default function Home() {
       );
     }
 
-    // Parallax effect for background elements
-    gsap.to(".parallax-bg", {
-      yPercent: -30,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "main",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
 
     // Clean up ScrollTrigger instances
     return () => {
