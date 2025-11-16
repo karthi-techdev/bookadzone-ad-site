@@ -90,16 +90,7 @@ export const metadata: Metadata = {
   classification: 'Advertising Platform',
   abstract: 'BookAdZone is an AI powerhouse platform, offering predictive insights to modernize and simplify outdoor ad space booking for advertisers and agencies all over india.',
   referrer: 'origin-when-cross-origin',
-  colorScheme: 'dark',
-  themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' }
-  ],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
+  // Viewport config moved to viewport.ts
   icons: {
     icon: [
       { url: '/favicon.ico' },
